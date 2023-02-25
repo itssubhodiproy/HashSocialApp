@@ -11,83 +11,67 @@ import {
 import { firebase } from "../config/firebase";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged(user => {
-  //     if (user) {
-  //       navigation.replace("Home")
-  //     }
-  //   })
-
-  //   return unsubscribe
-  // }, [])
-
-  // const handleRegistration = () => {
-  //   auth
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then(userCredentials => {
-  //       const user = userCredentials.user;
-  //       console.log('Registered with:', user.email);
-  //     })
-  //     .catch(error => alert(error.message))
-  // }
-
-  const handleLogin = async (email,password) => {
-    if(email === '' || password === '') return alert('Please fill in all fields')
+  const handleLogin = async (email, password) => {
+    if (email === "" || password === "")
+      return alert("Please fill in all fields");
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log('Logged in with:', email);
+      // remove whitespace
+      email = email.trim();
+      password = password.trim();
+      const user = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      console.log("Logged in with:", email);
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
       console.log(error.toString(error));
     }
-  }
+  };
 
   return (
-    <View
-      style={styles.container}
-      behavior="padding"
-    >
+    <View style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
         <TextInput
           placeholder="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
+          autoCorrect={false}
         />
       </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => handleLogin(email,password)}
+          onPress={() => handleLogin(email, password)}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
-        <Text style={styles.registerRedirect}>Don't have an account? <Text style={styles.registerText} >Register Now</Text></Text>
-        {/* <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity> */}
+        <Text style={styles.registerRedirect}>
+          Don't have an account?{" "}
+          <Text style={styles.registerText}>Register Now</Text>
+        </Text>
+        
       </View>
     </View>
-  )
-}
-
+  );
+};
 
 export default LoginScreen;
 
@@ -146,5 +130,5 @@ const styles = StyleSheet.create({
     color: "#0782F9",
     fontWeight: "700",
     fontSize: 12,
-  }
+  },
 });
