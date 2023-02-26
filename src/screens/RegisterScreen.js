@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import { firebase } from "../config/firebase";
 
-export default function RegisterScreen() {
-  
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+export default function RegisterScreen({navigation}) {
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let [firstName, setFirstName] = useState("");
+  let [lastName, setLastName] = useState("");
 
   // handle registration
   const handleRegistration = async (email, password, firstName, lastName) => {
@@ -93,14 +92,20 @@ export default function RegisterScreen() {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => handleRegistration(email, password)}
+          onPress={() => handleRegistration(email, password, firstName, lastName)}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
 
         <Text style={styles.loginRedirect}>
-          Already Registered? <Text style={styles.loginText}>Login Now</Text>
+          Already Registered?{" "}
+          <Text
+            style={styles.loginText}
+            onPress={() => navigation.navigate("Login")}
+          >
+            Login Now
+          </Text>
         </Text>
       </View>
     </View>

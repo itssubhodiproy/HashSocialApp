@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import { firebase } from "../config/firebase";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const handleLogin = async (email, password) => {
     if (email === "" || password === "")
@@ -65,9 +65,13 @@ const LoginScreen = () => {
 
         <Text style={styles.registerRedirect}>
           Don't have an account?{" "}
-          <Text style={styles.registerText}>Register Now</Text>
+          <Text
+            style={styles.registerText}
+            onPress={() => navigation.navigate("Register")}
+          >
+            Register Now
+          </Text>
         </Text>
-        
       </View>
     </View>
   );
