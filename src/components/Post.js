@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function Post() {
+export default function Post({imageUri, username}) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -12,7 +12,7 @@ export default function Post() {
               uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
             }}
           />
-          <Text style={styles.username}>@Subhodip</Text>
+          <Text style={styles.username}>@{username}</Text>
         </View>
         <TouchableOpacity style={styles.button}>
           <Image
@@ -27,7 +27,7 @@ export default function Post() {
         <Image
           style={styles.postImage}
           source={{
-            uri: "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg",
+            uri: imageUri,
           }}
         />
         <View style={styles.activityRow}>

@@ -67,7 +67,7 @@ const Dashboard = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="Profile"
       activeColor="black"
       inactiveColor="grey"
       barStyle={{ backgroundColor: "#d2d4d2" }}
