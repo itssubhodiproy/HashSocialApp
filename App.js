@@ -65,10 +65,10 @@ function App () {
         name="Dashboard"
         component={Dashboard}
         options={{
-          headerTitle: () => <Header title="Dashboard" />,
+          headerTitle: () => <Header title=""/>,
           headerStyle: {
-            // backgroundColor: "#f4511e",
-            height: 80,
+            backgroundColor: "white",
+            height: 40,
           },
         }}
       />

@@ -1,4 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  Image,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { firebase } from "../config/firebase";
 import {
@@ -9,6 +16,14 @@ import {
   query,
   where,
 } from "firebase/firestore"; // or 'firebase/firestore'
+import Feed from "../components/Feed";
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import Profile from "./Profile";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Form from "./Form";
+
+const Tab = createMaterialBottomTabNavigator();
 
 const Dashboard = () => {
   const [user, setUser] = useState();
@@ -51,26 +66,47 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>
-        {user
-          ? "Welcome " + user.firstName + " " + user.lastName
-          : "Welcome to HashSocial"}
-        {/* if user has not verified his email, show this */}
-      </Text>
-
-      {!firebase.auth().currentUser.emailVerified && (
-        <Text style={styles.verifyWarning}>
-          Please verify your email to continue
-        </Text>
-      )}
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogOut} style={styles.button}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <Tab.Navigator
+      initialRouteName="Feed"
+      activeColor="black"
+      inactiveColor="grey"
+      barStyle={{ backgroundColor: "#d2d4d2" }}
+    >
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Form"
+        component={Form}
+        options={{
+          tabBarLabel: "Post",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="plus-circle-outline" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: "Profile",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="account-settings"
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
@@ -82,47 +118,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  inputContainer: {
-    width: "80%",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-  buttonContainer: {
-    width: "60%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 40,
-  },
   button: {
-    backgroundColor: "#0782F9",
-    width: "100%",
-    padding: 15,
+    backgroundColor: "#e6e8e6",
+    padding: 10,
     borderRadius: 10,
     alignItems: "center",
-  },
-  buttonOutline: {
-    backgroundColor: "white",
-    marginTop: 5,
-    borderColor: "#0782F9",
-    borderWidth: 2,
   },
   buttonText: {
     color: "white",
     fontWeight: "700",
-    fontSize: 16,
   },
-  buttonOutlineText: {
-    color: "#0782F9",
-    fontWeight: "700",
-    fontSize: 16,
+  upload_bar: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "#d2d4d2",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
   },
-  verifyWarning: {
-    color: "red",
-    marginTop: 10,
+  upload_icon: {
+    width: 20,
+    height: 20,
   },
 });

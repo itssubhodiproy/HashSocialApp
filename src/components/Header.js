@@ -4,7 +4,7 @@ import React from "react";
 export default function Header(props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{props.title ? props.title : "Header"}</Text>
+      <Text style={styles.text}> {props.title}</Text>
     </View>
   );
 }
