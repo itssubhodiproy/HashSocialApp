@@ -40,31 +40,6 @@ const Dashboard = () => {
       });
   };
 
-  useEffect(() => {
-    // current logged in user
-    const currentLoggedInuser = firebase.auth().currentUser;
-    // get user data from firestore
-    try {
-      const retriveUserData = async () => {
-        // retrieve user data from firestore based on uid
-        const q = query(
-          collection(firebase.firestore(), "users"),
-          where("uid", "==", currentLoggedInuser.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          setUser(doc.data());
-        });
-      };
-      retriveUserData();
-    } catch (error) {
-      alert(error.message);
-      console.log(error);
-    }
-  }, []);
-
   return (
     <Tab.Navigator
       initialRouteName="Profile"
