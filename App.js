@@ -60,7 +60,7 @@ function App () {
           headerTitle: () => <Header title=""/>,
           headerStyle: {
             backgroundColor: "transparent",
-            height: 40,
+            height: 25,
           },
         }}
       />

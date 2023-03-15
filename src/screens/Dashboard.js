@@ -50,7 +50,7 @@ const Dashboard = () => {
         tabBarAndroidRipple: { borderless: false },
         tabBarIndicatorStyle: { backgroundColor: "black" },
         tabBarStyle: {
-          backgroundColor: "transparent",
+          backgroundColor: "white",
         },
       }}
     >
@@ -93,29 +93,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  button: {
-    backgroundColor: "#e6e8e6",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-  },
-  upload_bar: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    backgroundColor: "#d2d4d2",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-  },
-  upload_icon: {
-    width: 20,
-    height: 20,
-  },
+  }
 });
