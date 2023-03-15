@@ -43,14 +43,27 @@ const Dashboard = () => {
   return (
     <Tab.Navigator
       initialRouteName="Feed"
-      activeColor="black"
-      inactiveColor="grey"
       screenOptions={{
+        tabBarActiveTintColor: "white",
         tabBarLabelStyle: { fontSize: 10, fontWeight: "bold" },
         tabBarAndroidRipple: { borderless: false },
-        tabBarIndicatorStyle: { backgroundColor: "black" },
-        tabBarStyle: {
+        tabBarIndicatorStyle: {
           backgroundColor: "white",
+          height: 2,
+          width: 40,
+          marginHorizontal: 24,
+          borderRadius: 10,
+        },
+        tabBarIndicatorContainerStyle: {
+          backgroundColor: "transparent",
+          borderWidth: 0,
+        },
+        tabBarStyle: {
+          backgroundColor: "transparent",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
         },
       }}
     >
@@ -93,5 +106,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });
