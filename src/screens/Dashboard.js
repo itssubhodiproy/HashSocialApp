@@ -18,12 +18,12 @@ import {
 } from "firebase/firestore"; // or 'firebase/firestore'
 import Feed from "../components/Feed";
 // import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Profile from "./Profile";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Form from "./Form";
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 const Dashboard = () => {
   const [user, setUser] = useState();
@@ -42,43 +42,44 @@ const Dashboard = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Feed"
       activeColor="black"
       inactiveColor="grey"
-      barStyle={{ backgroundColor: "#d2d4d2" }}
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 10, fontWeight: "bold" },
+        tabBarAndroidRipple: { borderless: false },
+        tabBarIndicatorStyle: { backgroundColor: "black" },
+        tabBarStyle: {
+          backgroundColor: "transparent",
+        },
+      }}
     >
       <Tab.Screen
-        name="Feed"
+        name="For You"
         component={Feed}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={25} />
-          ),
+          tabBarLabel: "For You",
         }}
       />
       <Tab.Screen
-        name="Form"
-        component={Form}
+        name="Following"
+        component={Feed}
         options={{
-          tabBarLabel: "Post",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="plus-circle-outline" color={color} size={25} />
-          ),
+          tabBarLabel: "Following",
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="Recepies"
+        component={Feed}
         options={{
-          tabBarLabel: "Profile",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account-settings"
-              color={color}
-              size={25}
-            />
-          ),
+          tabBarLabel: "Recepies",
+        }}
+      />
+      <Tab.Screen
+        name="Discovery"
+        component={Feed}
+        options={{
+          tabBarLabel: "Discovery",
         }}
       />
     </Tab.Navigator>

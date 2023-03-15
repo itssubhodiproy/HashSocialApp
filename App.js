@@ -37,22 +37,14 @@ function App () {
           name="Login"
           component={LoginScreen}
           options={{
-            headerTitle: () => <Header title="Login Screen" />,
-            headerStyle: {
-              // backgroundColor: "#0782F9",
-              height: 80,
-            },
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{
-            headerTitle: () => <Header title="Register Screen" />,
-            headerStyle: {
-              // backgroundColor: "#0782F9",
-              height: 80,
-            },
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
@@ -67,7 +59,7 @@ function App () {
         options={{
           headerTitle: () => <Header title=""/>,
           headerStyle: {
-            backgroundColor: "white",
+            backgroundColor: "transparent",
             height: 40,
           },
         }}
