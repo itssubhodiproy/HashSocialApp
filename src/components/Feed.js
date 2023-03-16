@@ -7,6 +7,12 @@ const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
 
 const Feed = () => {
+  const [canSee, setCanSee] = useState(true);
+
+  const seeHandler = () => {
+    setCanSee(!canSee);
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -17,7 +23,7 @@ const Feed = () => {
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={true}
         renderItem={({ item }) => (
-          <Post item={item} CARD_WIDTH={CARD_WIDTH} CARD_HEIGHT={CARD_HEIGHT} />
+          <Post item={item} seeHandler={seeHandler} canSee={canSee} />
         )}
       />
     </View>
