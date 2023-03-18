@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { firebase } from "../config/firebase";
 
@@ -34,7 +35,15 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container} behavior="padding">
+    <View style={styles.container}>
+      <View>
+        <Image
+          source={{
+            uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
+          }}
+          style={{ width: 200, height: 200, margin: 20 }}
+        />
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -93,7 +102,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 10,
   },
   buttonContainer: {
     width: "60%",
@@ -102,7 +111,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: "#fc433c",
     width: "100%",
     padding: 15,
     borderRadius: 10,
@@ -120,7 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "#0782F9",
+    color: "#fc433c",
     fontWeight: "700",
     fontSize: 16,
   },
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   registerText: {
-    color: "#0782F9",
+    color: "#fc433c",
     fontWeight: "700",
     fontSize: 12,
   },

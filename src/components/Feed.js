@@ -31,19 +31,7 @@ const Feed = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // position: "realative",
-    // zIndex: 1,
-  },
-  // image: {
-  //   width: CARD_WIDTH,
-  //   height: CARD_HEIGHT,
-  //   maxHeight: 900,
-  //   maxWidth: 600,
-  //   resizeMode: "cover",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
+  container: {},
 });
 
 export default Feed;

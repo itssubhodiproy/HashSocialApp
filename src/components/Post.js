@@ -7,12 +7,19 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState } from "react";
+import BottomDrawer from "react-native-bottom-drawer-view";
+import BottomDrawerTab from "./BottomDrawerTab";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
 
-export default function Post({ item, canSee, seeHandler }) {
-  // const [canSee, setCanSee] = useState(true);
+export default function Post({ item }) {
+  const [canSee, setCanSee] = useState(true);
+  const [open, setOpen] = useState(false);
+  const seeHandler = () => {
+    setCanSee(!canSee);
+  };
+
   return (
     <View style={styles.imageContainer}>
       <Image
@@ -27,15 +34,21 @@ export default function Post({ item, canSee, seeHandler }) {
           <View style={styles.badges}>
             <Image
               style={styles.singleBadge}
-              source={require("../../assets/badge1.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/6270/6270515.png",
+              }}
             />
             <Image
               style={styles.singleBadge}
-              source={require("../../assets/badge3.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/3314/3314467.png",
+              }}
             />
             <Image
               style={styles.singleBadge}
-              source={require("../../assets/badge3.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/2583/2583264.png",
+              }}
             />
           </View>
           {/* recepie metrics */}
@@ -66,29 +79,77 @@ export default function Post({ item, canSee, seeHandler }) {
               <Text style={styles.nonMainTextProfile}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Voluptatibus, quod. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Voluptatibus, quod. Lorem ipsum dolor sit amet
               </Text>
             </View>
           </View>
         </>
       )}
-      <View>
-        {canSee ? (
-          <TouchableWithoutFeedback onPress={seeHandler}>
+      {/* bottomBar */}
+      <View style={styles.bottomBar}>
+        <View>
+          {canSee ? (
+            <TouchableWithoutFeedback onPress={seeHandler}>
+              <Image
+                style={styles.bottomBarIcon}
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/512/722/722174.png",
+                }}
+              ></Image>
+            </TouchableWithoutFeedback>
+          ) : (
+            <TouchableWithoutFeedback onPress={seeHandler}>
+              <Image
+                style={styles.bottomBarIcon}
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/512/2767/2767146.png",
+                }}
+              ></Image>
+            </TouchableWithoutFeedback>
+          )}
+        </View>
+        <View>
+          <Image
+            source={{
+              uri: "https://icons.veryicon.com/png/o/miscellaneous/prototyping-tool/search-bar-01.png",
+            }}
+            style={styles.bottomBarIcon}
+          ></Image>
+        </View>
+        <View>
+          <TouchableWithoutFeedback onPress={() => setOpen(!open)}>
             <Image
-              style={styles.eyeIcon}
-              source={require("../../assets/eye-open.png")}
+              source={{
+                uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
+              }}
+              style={styles.forkIcon}
             ></Image>
           </TouchableWithoutFeedback>
-        ) : (
-          <TouchableWithoutFeedback onPress={seeHandler}>
-            <Image
-              style={styles.eyeIcon}
-              source={require("../../assets/eye-off.png")}
-            ></Image>
-          </TouchableWithoutFeedback>
-        )}
+        </View>
+        <View>
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/1827/1827504.png",
+            }}
+            style={styles.bottomBarIcon}
+          ></Image>
+        </View>
+        <View>
+          <Image
+            source={{
+              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+            }}
+            style={styles.ProfilePicture}
+          ></Image>
+        </View>
       </View>
+      {open && (
+        <BottomDrawer
+          containerHeight={CARD_HEIGHT / 2}
+          onCollapsed={() => setOpen(false)}
+        >
+          <BottomDrawerTab />
+        </BottomDrawer>
+      )}
     </View>
   );
 }
@@ -102,10 +163,10 @@ const styles = StyleSheet.create({
   },
   UserProfile: {
     position: "absolute",
-    bottom: 80,
-    left: 30,
+    bottom: 100,
+    alignSelf: "center",
     width: 300,
-    height: 150,
+    height: 130,
     backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 10,
     display: "flex",
@@ -197,12 +258,34 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
   },
-  eyeIcon: {
-    position: "absolute",
-    bottom: 30,
-    // right: 0,
-    left: 160,
+  bottomBarIcon: {
     width: 35,
     height: 35,
+  },
+  bottomBar: {
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 20,
+    width: 300,
+    height: 50,
+    backgroundColor: "#cacccb",
+    opacity: 0.8,
+    borderRadius: 30,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  ProfilePicture: {
+    width: 35,
+    height: 35,
+    resizeMode: "cover",
+    borderRadius: 50,
+  },
+  forkIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: "cover",
+    borderRadius: 50,
   },
 });
