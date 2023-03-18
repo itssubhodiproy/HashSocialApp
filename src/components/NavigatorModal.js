@@ -26,7 +26,6 @@ const NavigatorModal = () => {
         tabBarStyle: {
           backgroundColor: "white",
         },
-        // swipeEnabled: false,
       }}
     >
       <Tab.Screen

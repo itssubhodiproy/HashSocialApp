@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import BottomDrawer from "react-native-bottom-drawer-view";
-import BottomDrawerTab from "./BottomDrawerTab";
+import BottomDrawerTab from "./BottomDrawer";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
