@@ -1,7 +1,6 @@
-import { useNavigation } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
+// import { useNavigation } from "@react-navigation/core";
+import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
