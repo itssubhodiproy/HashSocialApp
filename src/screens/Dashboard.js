@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-  Image,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { firebase } from "../config/firebase";
 import {
@@ -17,11 +10,7 @@ import {
   where,
 } from "firebase/firestore"; // or 'firebase/firestore'
 import Feed from "../components/Feed";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import Profile from "./Profile";
-import Form from "./Form";
 
 const Tab = createMaterialTopTabNavigator();
 

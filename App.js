@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from "./src/config/firebase";
@@ -13,7 +12,7 @@ import Header from "./src/components/Header";
 
 const Stack = createStackNavigator();
 
-function App () {
+function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
 
@@ -57,7 +56,7 @@ function App () {
         name="Dashboard"
         component={Dashboard}
         options={{
-          headerTitle: () => <Header title=""/>,
+          headerTitle: () => <Header title="" />,
           headerStyle: {
             backgroundColor: "transparent",
             height: 25,
@@ -83,4 +82,4 @@ export default () => {
       <App />
     </NavigationContainer>
   );
-}
+};
