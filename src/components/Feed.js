@@ -22,6 +22,7 @@ const Feed = () => {
         data={images}
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={true}
+        initialNumToRender={7}
         renderItem={({ item }) => (
           <Post item={item} seeHandler={seeHandler} canSee={canSee} />
         )}

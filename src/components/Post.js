@@ -5,29 +5,48 @@ import {
   Dimensions,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import BottomDrawer from "react-native-bottom-drawer-view";
-import BottomDrawerTab from "./BottomDrawer";
+import BottomDrawerTab from "./BottomDrawer/BottomDrawer";
+import { LinearGradient } from "expo-linear-gradient";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
 
-export default function Post({ item }) {
+function Post({ item }) {
   const [canSee, setCanSee] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const seeHandler = () => {
     setCanSee(!canSee);
+  };
+  const openDrawerHandler = () => {
+    setOpenDrawer(!openDrawer);
   };
 
   return (
     <View style={styles.imageContainer}>
-      <Image
-        width={CARD_WIDTH}
-        height={CARD_HEIGHT}
-        style={styles.image}
-        source={{ uri: item }}
-      ></Image>
+      <LinearGradient
+        colors={["rgba(0,0,0,0.8)", "transparent"]}
+        style={styles.topGradient}
+      />
+      <TouchableWithoutFeedback onPress={openDrawerHandler}>
+        <Image
+          width={CARD_WIDTH}
+          height={CARD_HEIGHT}
+          style={styles.image}
+          source={{ uri: item }}
+          onPress={openDrawerHandler}
+        ></Image>
+      </TouchableWithoutFeedback>
+      {!openDrawer && (
+        <LinearGradient
+          colors={["transparent", "rgba(0,0,0,0.8)"]}
+          style={styles.bottomGradient}
+        />
+      )}
+
       {canSee && (
         <>
           {/* badges */}
@@ -63,89 +82,93 @@ export default function Post({ item }) {
             </View>
           </View>
           {/* user profile */}
-          <View style={styles.UserProfile}>
-            <Image
-              style={styles.userProfilePicture}
-              source={{
-                uri: "https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg",
-              }}
-            />
-            <View style={styles.userProfileDesc}>
-              <Text style={styles.mainTextProfile}>@subhodip</Text>
-              <Text style={styles.userAchivements}>
-                {" "}
-                54 Creations, 10 Forks
-              </Text>
-              <Text style={styles.nonMainTextProfile}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptatibus, quod. Lorem ipsum dolor sit amet consectetur
-              </Text>
+          {!openDrawer && (
+            <View style={styles.UserProfile}>
+              <Image
+                style={styles.userProfilePicture}
+                source={{
+                  uri: "https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg",
+                }}
+              />
+              <View style={styles.userProfileDesc}>
+                <Text style={styles.mainTextProfile}>@subhodip</Text>
+                <Text style={styles.userAchivements}>
+                  {" "}
+                  54 Creations, 10 Forks
+                </Text>
+                <Text style={styles.nonMainTextProfile}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Voluptatibus, quod. Lorem ipsum dolor sit amet consectetur
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
         </>
       )}
       {/* bottomBar */}
-      <View style={styles.bottomBar}>
-        <View>
-          {canSee ? (
-            <TouchableWithoutFeedback onPress={seeHandler}>
-              <Image
-                style={styles.bottomBarIcon}
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/512/722/722174.png",
-                }}
-              ></Image>
-            </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback onPress={seeHandler}>
-              <Image
-                style={styles.bottomBarIcon}
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/512/2767/2767146.png",
-                }}
-              ></Image>
-            </TouchableWithoutFeedback>
-          )}
-        </View>
-        <View>
-          <Image
-            source={{
-              uri: "https://icons.veryicon.com/png/o/miscellaneous/prototyping-tool/search-bar-01.png",
-            }}
-            style={styles.bottomBarIcon}
-          ></Image>
-        </View>
-        <View>
-          <TouchableWithoutFeedback onPress={() => setOpen(!open)}>
+      {!openDrawer && (
+        <View style={styles.bottomBar}>
+          <View>
+            {canSee ? (
+              <TouchableWithoutFeedback onPress={seeHandler}>
+                <Image
+                  style={styles.bottomBarIcon}
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/512/722/722174.png",
+                  }}
+                ></Image>
+              </TouchableWithoutFeedback>
+            ) : (
+              <TouchableWithoutFeedback onPress={seeHandler}>
+                <Image
+                  style={styles.bottomBarIcon}
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/512/2767/2767146.png",
+                  }}
+                ></Image>
+              </TouchableWithoutFeedback>
+            )}
+          </View>
+          <View>
             <Image
               source={{
-                uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
+                uri: "https://icons.veryicon.com/png/o/miscellaneous/prototyping-tool/search-bar-01.png",
               }}
-              style={styles.forkIcon}
+              style={styles.bottomBarIcon}
             ></Image>
-          </TouchableWithoutFeedback>
+          </View>
+          <View>
+            <TouchableWithoutFeedback>
+              <Image
+                source={{
+                  uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
+                }}
+                style={styles.forkIcon}
+              ></Image>
+            </TouchableWithoutFeedback>
+          </View>
+          <View>
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/1827/1827504.png",
+              }}
+              style={styles.bottomBarIcon}
+            ></Image>
+          </View>
+          <View>
+            <Image
+              source={{
+                uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+              }}
+              style={styles.ProfilePicture}
+            ></Image>
+          </View>
         </View>
-        <View>
-          <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/1827/1827504.png",
-            }}
-            style={styles.bottomBarIcon}
-          ></Image>
-        </View>
-        <View>
-          <Image
-            source={{
-              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
-            }}
-            style={styles.ProfilePicture}
-          ></Image>
-        </View>
-      </View>
-      {open && (
+      )}
+      {openDrawer && (
         <BottomDrawer
-          containerHeight={CARD_HEIGHT / 2}
-          onCollapsed={() => setOpen(false)}
+          containerHeight={CARD_HEIGHT / 2 + 100}
+          onCollapsed={openDrawerHandler}
         >
           <BottomDrawerTab />
         </BottomDrawer>
@@ -167,12 +190,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 300,
     height: 130,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    // backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    zIndex: 2,
   },
   userProfilePicture: {
     width: 50,
@@ -183,13 +207,12 @@ const styles = StyleSheet.create({
   },
   userAchivements: {
     fontSize: 14,
-    color: "red",
+    color: "#fc433c",
     fontStyle: "italic",
     fontWeight: "bold",
-    // margin: 10,
+    marginBottom: 5,
   },
   userProfileDesc: {
-    // backgroundColor: "rgba(0,0,0,0.5)",
     marginTop: 10,
     display: "flex",
     flexDirection: "column",
@@ -204,7 +227,6 @@ const styles = StyleSheet.create({
   },
   nonMainTextProfile: {
     fontSize: 12,
-    // fontWeight: "bold",
     color: "white",
   },
   badges: {
@@ -213,16 +235,17 @@ const styles = StyleSheet.create({
     left: 0,
     width: 180,
     height: 60,
-    // backgroundColor: "rgba(0,0,0,0.2)",
     borderRadius: 5,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 2,
   },
   singleBadge: {
     width: 50,
     height: 50,
     resizeMode: "cover",
+    margin: 2,
   },
   recepieMetrics: {
     position: "absolute",
@@ -230,10 +253,8 @@ const styles = StyleSheet.create({
     right: 15,
     width: 60,
     height: 130,
-    // backgroundColor: "rgba(0,0,0,0.2)",
-    // borderRadius: 5,
-    // flexDirection: "column",
     justifyContent: "space-evenly",
+    zIndex: 2,
   },
   singleRecepieMetrics: {
     width: 60,
@@ -275,10 +296,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
+    zIndex: 2,
   },
   ProfilePicture: {
-    width: 35,
-    height: 35,
+    width: 40,
+    height: 40,
     resizeMode: "cover",
     borderRadius: 50,
   },
@@ -288,4 +310,22 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 50,
   },
+  topGradient: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 200,
+    zIndex: 1,
+  },
+  bottomGradient: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 500,
+    zIndex: 1,
+  },
 });
+
+export default memo(Post);

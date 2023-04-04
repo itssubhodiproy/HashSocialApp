@@ -4,7 +4,7 @@ import NavigatorModal from "./NavigatorModal";
 
 export default function BottomDrawer() {
   return (
-    <>
+    <View style={styles.bottomDrawer}>
       {/* middle line of the drawer to drag it up and down */}
       <View style={styles.middleLine}></View>
       {/* recepie name */}
@@ -34,7 +34,7 @@ export default function BottomDrawer() {
           }}
         />
       </View>
-    </>
+    </View>
   );
 }
 
@@ -71,11 +71,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignSelf: "center",
     borderRadius: 30,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
-    shadowRadius: 2,  
-    elevation: 5
+    shadowRadius: 2,
+    elevation: 5,
   },
   activityButton: {
     width: 25,
@@ -83,5 +83,19 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     // borderRadius: 50,
     margin: 10,
+  },
+  bottomDrawer: {
+    width: "100%",
+    // height: "100%",
+    // backgroundColor: "white",
+    // borderTopLeftRadius: 30,
+    // borderTopRightRadius: 30,
+    // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "flex-start",
+    // alignItems: "center",
+    // position: "absolute",
+    // bottom: 0,
+    zIndex: 100,
   },
 });
