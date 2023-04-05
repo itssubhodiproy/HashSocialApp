@@ -8,7 +8,8 @@ import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import Dashboard from "./src/screens/Dashboard";
 import { useEffect, useState } from "react";
-import Header from "./src/components/Header";
+// import Header from "./src/components/Header";
+import CameraScreen from "./src/components/CameraScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,18 +52,28 @@ function App() {
   }
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Dashboard">
       <Stack.Screen
         name="Dashboard"
         component={Dashboard}
         options={{
-          headerTitle: () => <Header title="" />,
-          headerStyle: {
-            backgroundColor: "transparent",
-            height: 25,
-          },
+          headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="CameraScreen"
+        component={CameraScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <Stack.Screen
+        name="AddPostScreen"
+        component={AddPostScreen}
+        options={{
+          headerShown: false,
+        }}
+      /> */}
     </Stack.Navigator>
   );
 }

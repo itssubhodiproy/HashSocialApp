@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert,
 } from "react-native";
 import { firebase } from "../config/firebase";
+import { StatusBar } from "expo-status-bar";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
         .signInWithEmailAndPassword(email, password);
       console.log("Logged in with:", email);
     } catch (error) {
-      alert(error.message);
+      Alert.alert(error.message);
       console.log(error.toString(error));
     }
   };
@@ -81,6 +83,7 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </Text>
       </View>
+      <StatusBar style="auto" backgroundColor="white" translucent={false} />
     </View>
   );
 };

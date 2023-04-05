@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  Dimensions,
-  Text,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Image, Dimensions, Alert } from "react-native";
 import React, { useState, memo } from "react";
 import BottomDrawer from "react-native-bottom-drawer-view";
 import BottomDrawerTab from "./BottomDrawer/BottomDrawer";
@@ -15,6 +7,7 @@ import Badges from "./FeedScreen/Badges";
 import Metrics from "./FeedScreen/Metrics";
 import UserDetails from "./FeedScreen/UserDetails";
 import BottomBar from "./FeedScreen/BottomBar";
+import { Camera } from "expo-camera";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
@@ -22,6 +15,8 @@ const CARD_HEIGHT = Dimensions.get("window").height;
 function Post({ item }) {
   const [canSee, setCanSee] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [startCamera, setStartCamera] = useState(false);
+
   const seeHandler = () => {
     setCanSee(!canSee);
   };
@@ -30,7 +25,7 @@ function Post({ item }) {
   };
 
   return (
-    <View style={styles.imageContainer}>
+    <View>
       <LinearGradient
         colors={["rgba(0,0,0,0.8)", "transparent"]}
         style={styles.topGradient}
@@ -60,7 +55,12 @@ function Post({ item }) {
         </>
       )}
       {/* bottomBar */}
-      {!openDrawer && <BottomBar seeHandler={seeHandler} canSee={canSee} />}
+      {!openDrawer && (
+        <BottomBar
+          seeHandler={seeHandler}
+          canSee={canSee}
+        />
+      )}
       {openDrawer && (
         <BottomDrawer
           containerHeight={CARD_HEIGHT / 2 + 100}
@@ -80,30 +80,6 @@ const styles = StyleSheet.create({
     maxHeight: 900,
     maxWidth: 600,
   },
-  
-  mainTextProfile: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-  },
-  nonMainTextProfile: {
-    fontSize: 12,
-    color: "white",
-  },
-  
-  
-  mainText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "black",
-  },
-  nonMainText: {
-    fontSize: 10,
-    fontWeight: "bold",
-    color: "black",
-  },
-  
-
   topGradient: {
     position: "absolute",
     left: 0,

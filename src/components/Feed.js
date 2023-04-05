@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { StyleSheet, View, FlatList, Dimensions } from "react-native";
 import Post from "./Post";
 import { images } from "../../assets/images";
+import { StatusBar } from "expo-status-bar";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
 
 const Feed = () => {
+  // const { __startCamera } = route.params;
   const [canSee, setCanSee] = useState(true);
 
   const seeHandler = () => {
@@ -14,7 +16,7 @@ const Feed = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <FlatList
         snapToInterval={CARD_HEIGHT}
         snapToAlignment="center"
@@ -24,13 +26,17 @@ const Feed = () => {
         showsVerticalScrollIndicator={true}
         initialNumToRender={7}
         renderItem={({ item }) => (
-          <Post item={item} seeHandler={seeHandler} canSee={canSee} />
+          <Post
+            item={item}
+            seeHandler={seeHandler}
+            canSee={canSee}
+          />
         )}
       />
-    </View>
+      <StatusBar style="light" backgroundColor="black" translucent={false} />
+    </>
   );
 };
-
 const styles = StyleSheet.create({
   container: {},
 });

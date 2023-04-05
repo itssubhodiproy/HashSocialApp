@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableWithoutFeedback } from "react-native";
 import React from "react";
+import { useNavigation } from '@react-navigation/native';
+
 
 const BottomBar = ({seeHandler, canSee}) => {
+
+  const navigation = useNavigation()
   return (
     <View style={styles.bottomBar}>
       <View>
@@ -34,7 +38,7 @@ const BottomBar = ({seeHandler, canSee}) => {
         ></Image>
       </View>
       <View>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('CameraScreen')}>
           <Image
             source={{
               uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
