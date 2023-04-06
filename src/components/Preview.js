@@ -8,14 +8,28 @@ const Preview = ({ route }) => {
   return (
     <View>
       <Image source={{ uri: photo.uri }} style={{ height: "100%" }} />
-      <View style={styles.back_button_position}>
+
+      <View style={styles.container}>
         <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
           <Image
-            source={require("../../assets/back.png")}
-            style={styles.back_button}
+            source={require("../../assets/repeat.png")}
+            style={styles.button}
+          ></Image>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
+          <Image
+            source={require("../../assets/hashlogo.png")}
+            style={styles.button}
+          ></Image>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
+          <Image
+            source={require("../../assets/discovery.png")}
+            style={styles.button}
           ></Image>
         </TouchableOpacity>
       </View>
+      <Text style={styles.moral_text}>Get Hashed</Text>
     </View>
   );
 };
@@ -28,9 +42,32 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
   },
-  back_button: {
+  button: {
     width: 50,
     height: 50,
     resizeMode: "contain",
+  },
+  container: {
+    position: "absolute",
+    bottom: 50,
+    left: 0,
+    right: 0,
+    width: "100%",
+    backgroundColor: "transparent",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  moral_text: {
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
+    width: "100%",
+    backgroundColor: "transparent",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "white",
   },
 });

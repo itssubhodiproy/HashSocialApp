@@ -7,7 +7,6 @@ import Badges from "./FeedScreen/Badges";
 import Metrics from "./FeedScreen/Metrics";
 import UserDetails from "./FeedScreen/UserDetails";
 import BottomBar from "./FeedScreen/BottomBar";
-import { Camera } from "expo-camera";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
@@ -15,7 +14,6 @@ const CARD_HEIGHT = Dimensions.get("window").height;
 function Post({ item }) {
   const [canSee, setCanSee] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [startCamera, setStartCamera] = useState(false);
 
   const seeHandler = () => {
     setCanSee(!canSee);

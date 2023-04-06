@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 const CameraScreen = () => {
   const { height } = useWindowDimensions();
   const width = height * 0.6;
-  const [startCamera, setStartCamera] = useState(true);
+  const [startCamera, setStartCamera] = useState(false);
   const [flash, setFlash] = useState(false);
   const [cameraFrontFace, setCameraFrontFace] = useState(false);
   const navigation = useNavigation();
@@ -26,7 +26,7 @@ const CameraScreen = () => {
   const ClickImage = async () => {
     if (camera) {
       let photo = await camera.takePictureAsync();
-      console.log(photo);
+      setStartCamera(false);
       navigation.navigate("Preview", { photo: photo });
     }
   };
@@ -42,7 +42,7 @@ const CameraScreen = () => {
         await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
       }
     } catch (err) {
-      console.warn(err);
+      Alert.alert("Camera permission error", err);
     }
   };
 
@@ -55,7 +55,7 @@ const CameraScreen = () => {
       {startCamera ? (
         <View style={styles.container}>
           <Camera
-            style={{ height: height, width: width }}
+            style={{ height: height, width: width - 10 }}
             ref={(r) => {
               camera = r;
             }}
