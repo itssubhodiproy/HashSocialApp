@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 const CameraScreen = () => {
   const { height } = useWindowDimensions();
   const width = height * 0.6;
-  const [startCamera, setStartCamera] = useState(false);
+  const [startCamera, setStartCamera] = useState(true);
   const [flash, setFlash] = useState(false);
   const [cameraFrontFace, setCameraFrontFace] = useState(false);
   const navigation = useNavigation();
@@ -26,6 +26,7 @@ const CameraScreen = () => {
   const ClickImage = async () => {
     if (camera) {
       let photo = await camera.takePictureAsync();
+      console.log(photo);
       navigation.navigate("Preview", { photo: photo });
     }
   };

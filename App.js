@@ -10,6 +10,7 @@ import Dashboard from "./src/screens/Dashboard";
 import { useEffect, useState } from "react";
 // import Header from "./src/components/Header";
 import CameraScreen from "./src/components/CameraScreen";
+import Preview from "./src/components/Preview";
 
 const Stack = createStackNavigator();
 
@@ -67,13 +68,13 @@ function App() {
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
-        name="AddPostScreen"
-        component={AddPostScreen}
+      <Stack.Screen
+        name="Preview"
+        component={Preview}
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
     </Stack.Navigator>
   );
 }
