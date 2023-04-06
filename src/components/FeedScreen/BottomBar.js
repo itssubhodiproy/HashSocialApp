@@ -1,11 +1,21 @@
-import { StyleSheet, Text, View, Image, TouchableWithoutFeedback } from "react-native";
-import React from "react";
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Camera } from "expo-camera";
 
+const BottomBar = ({ seeHandler, canSee }) => {
+  const navigation = useNavigation();
 
-const BottomBar = ({seeHandler, canSee}) => {
+  const __startCamera = async () => {
+    navigation.navigate("CameraScreen");
+  };
 
-  const navigation = useNavigation()
   return (
     <View style={styles.bottomBar}>
       <View>
@@ -38,7 +48,7 @@ const BottomBar = ({seeHandler, canSee}) => {
         ></Image>
       </View>
       <View>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('CameraScreen')}>
+        <TouchableWithoutFeedback onPress={__startCamera}>
           <Image
             source={{
               uri: "https://user-images.githubusercontent.com/125730480/223720633-6c1e6ac0-6ff4-4c8b-8136-23aa7d97f5a5.png",
@@ -77,7 +87,7 @@ const styles = StyleSheet.create({
   bottomBar: {
     position: "absolute",
     alignSelf: "center",
-    bottom: 20,
+    bottom: 30,
     width: 300,
     height: 50,
     backgroundColor: "#cacccb",

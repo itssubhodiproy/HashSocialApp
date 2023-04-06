@@ -3,64 +3,116 @@ import {
   Text,
   View,
   useWindowDimensions,
-  TouchableWithoutFeedback,
   Image,
   TouchableOpacity,
+  Alert,
+  PermissionsAndroid,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
 
 const CameraScreen = () => {
-  const { width } = useWindowDimensions();
-  const height = Math.round((width * 16) / 9);
+  const { height } = useWindowDimensions();
+  const width = height * 0.6;
   const [startCamera, setStartCamera] = useState(false);
+  const [flash, setFlash] = useState(false);
+  const [cameraFrontFace, setCameraFrontFace] = useState(false);
   const navigation = useNavigation();
 
   // start camera function
   let camera;
-  const __startCamera = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    console.log(status);
-    if (status == "granted") {
-      setStartCamera(true);
-    } else {
-      Alert.alert("Access denied");
+
+  const ClickImage = async () => {
+    if (camera) {
+      let photo = await camera.takePictureAsync();
+      navigation.navigate("Preview", { photo: photo });
     }
   };
+
+  const requestCameraPermission = async () => {
+    try {
+      const cameraAccessCheck = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      if (cameraAccessCheck) {
+        setStartCamera(true);
+      } else {
+        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    requestCameraPermission();
+  }, [startCamera]);
+
   return (
-    <View style={styles.container}>
-      <Camera
-        style={{ height: "100%", width: "125%" }}
-        ref={(r) => {
-          camera = r;
-        }}
-        ratio="16:9"
-      />
-      <View style={styles.bottombar}>
-        <TouchableOpacity>
-          <Image
-            source={require("../../assets/camera-flash.png")}
-            style={styles.bottom_button}
-          ></Image>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image
-            source={require("../../assets/camera-click.png")}
-            style={styles.bottom_button}
-          ></Image>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image
-            source={require("../../assets/camera-switch.png")}
-            style={styles.bottom_button}
-          ></Image>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.buttom_text}>Tap for image and hold for video</Text>
-      <StatusBar backgroundColor="transparent" style="light"></StatusBar>
-    </View>
+    <>
+      {startCamera ? (
+        <View style={styles.container}>
+          <Camera
+            style={{ height: height, width: width }}
+            ref={(r) => {
+              camera = r;
+            }}
+            ratio="16:9"
+            flashMode={
+              flash
+                ? Camera.Constants.FlashMode.torch
+                : Camera.Constants.FlashMode.off
+            }
+            type={
+              cameraFrontFace
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+            }
+          />
+          <View style={styles.bottombar}>
+            <TouchableOpacity onPress={() => setFlash((flash) => !flash)}>
+              <Image
+                source={require("../../assets/camera-flash.png")}
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ClickImage}>
+              <Image
+                source={require("../../assets/camera-click.png")}
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                setCameraFrontFace((cameraFrontFace) => !cameraFrontFace)
+              }
+            >
+              <Image
+                source={require("../../assets/camera-switch.png")}
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.buttom_text}>
+            Tap for image and hold for video
+          </Text>
+        </View>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Please allow camera and microphone permission
+          </Text>
+          <TouchableOpacity onPress={requestCameraPermission}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color: "blue" }}>
+              open camera
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </>
   );
 };
 
