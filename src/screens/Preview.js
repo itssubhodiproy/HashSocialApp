@@ -16,7 +16,9 @@ const Preview = ({ route }) => {
             style={styles.button}
           ></Image>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CreateScreen", { photo: photo })}
+        >
           <Image
             source={require("../../assets/hashlogo.png")}
             style={styles.button}

@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 // import Header from "./src/components/Header";
 import CameraScreen from "./src/screens/CameraScreen";
 import Preview from "./src/screens/Preview";
+import CreateScreen from "./src/screens/CreateScreen";
+import horizontalAnimation from "./src/components/horizontalAnimation";
+import verticalAnimation from "./src/components/verticalAnimation";
 
 const Stack = createStackNavigator();
 
@@ -53,27 +56,24 @@ function App() {
   }
 
   return (
-    <Stack.Navigator initialRouteName="Dashboard">
-      <Stack.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          headerShown: false,
-        }}
-      />
+    <Stack.Navigator
+      initialRouteName="Dashboard"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen
         name="CameraScreen"
         component={CameraScreen}
-        options={{
-          headerShown: false,
-        }}
       />
       <Stack.Screen
         name="Preview"
         component={Preview}
-        options={{
-          headerShown: false,
-        }}
+        options={horizontalAnimation}
+      />
+      <Stack.Screen
+        name="CreateScreen"
+        component={CreateScreen}
+        options={verticalAnimation}
       />
     </Stack.Navigator>
   );
