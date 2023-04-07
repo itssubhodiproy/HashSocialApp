@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -22,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/hashlogo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.subh_cs.hashsocialreactnativeapp"
     },
     "web": {
       "favicon": "./assets/hashlogo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f722628d-e377-41c8-9e12-555e9ed4af3d"
+      }
     }
   }
 }
