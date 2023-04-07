@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, FlatList, Dimensions } from "react-native";
-import Post from "./Post";
+import Post from "../components/Post";
 import { images } from "../../assets/images";
 import { StatusBar } from "expo-status-bar";
 

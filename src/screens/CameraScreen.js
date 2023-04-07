@@ -39,7 +39,14 @@ const CameraScreen = () => {
       if (cameraAccessCheck) {
         setStartCamera(true);
       } else {
-        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("CAMERA Permission Granted");
+        } else {
+          alert("CAMERA Permission Denied");
+        }
       }
     } catch (err) {
       Alert.alert("Camera permission error", err);

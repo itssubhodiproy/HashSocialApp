@@ -9,8 +9,8 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import Dashboard from "./src/screens/Dashboard";
 import { useEffect, useState } from "react";
 // import Header from "./src/components/Header";
-import CameraScreen from "./src/components/CameraScreen";
-import Preview from "./src/components/Preview";
+import CameraScreen from "./src/screens/CameraScreen";
+import Preview from "./src/screens/Preview";
 
 const Stack = createStackNavigator();
 

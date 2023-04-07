@@ -9,7 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore"; // or 'firebase/firestore'
-import Feed from "../components/Feed";
+import Feed from "./Feed";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Tab = createMaterialTopTabNavigator();
