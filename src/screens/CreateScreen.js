@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import CreateNavigator from "../components/CreateNavigator/CreateNavigator";
+import { firebase } from "../config/firebase";
 
 const CreateScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -22,10 +23,24 @@ const CreateScreen = ({ route }) => {
 
   const SubmitPost = async () => {
     if (recepieTitle === "" || recepieDescription === "") {
-      Alert.alert("Please fill all the fields");
+      Alert.alert(
+        "Please fill all the fields",
+        "For posting recepie, title and description is required"
+      );
       return;
     }
-    console.post("post submitted");
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+    const uid = user.uid;
+    const docRef = await db.collection("posts").add({
+      uid: uid,
+      title: recepieTitle,
+      description: recepieDescription,
+      photo: photo,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    console.log("Document written with ID: ", docRef.id);
+    navigation.navigate("Dashboard");
   };
 
   return (
@@ -68,6 +83,14 @@ const CreateScreen = ({ route }) => {
         <View style={styles.navigator}>
           <CreateNavigator />
         </View>
+        <View style={styles.submitButton}>
+          <TouchableOpacity onPress={SubmitPost}>
+            <Image
+              source={require("../../assets/hashlogo.png")}
+              style={{ width: 60, height: 60 }}
+            ></Image>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -82,6 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
     width: "100%",
+    height: "100%",
   },
   topIcons: {
     width: 30,
@@ -115,7 +139,16 @@ const styles = StyleSheet.create({
   },
   navigator: {
     width: "100%",
-    height: "100%",
+    height: "60%",
     marginTop: 20,
+  },
+  submitButton: {
+    position: "absolute",
+    bottom: 10,
+    width: "100%",
+    height: "10%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

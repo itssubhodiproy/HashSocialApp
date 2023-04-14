@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View,Image } from "react-native";
 import React from "react";
 
-const UserDetails = () => {
+const UserDetails = ({userName}) => {
   return (
     <View style={styles.UserProfile}>
       <Image
@@ -11,7 +11,7 @@ const UserDetails = () => {
         }}
       />
       <View style={styles.userProfileDesc}>
-        <Text style={styles.mainText}>@subhodip</Text>
+        <Text style={styles.mainText}>@{userName}</Text>
         <Text style={styles.userAchivements}> 54 Creations, 10 Forks</Text>
         <Text style={styles.nonMainText}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus,

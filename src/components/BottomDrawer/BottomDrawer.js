@@ -2,14 +2,17 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import NavigatorModal from "./NavigatorModal";
 
-export default function BottomDrawer() {
+export default function BottomDrawer({ title, description }) {
   return (
     <View style={styles.bottomDrawer}>
       {/* middle line of the drawer to drag it up and down */}
       <View style={styles.middleLine}></View>
       {/* recepie name */}
       <View>
-        <Text style={styles.heading}>STREAK TARTARE</Text>
+        <Text style={styles.heading}>{title}</Text>
+      </View>
+      <View>
+        <Text style={styles.description}>{description}</Text>
       </View>
       <View style={styles.navigator}>
         <NavigatorModal />
@@ -53,6 +56,12 @@ const styles = StyleSheet.create({
     color: "black",
     alignSelf: "center",
     marginTop: 10,
+  },
+  description: {
+    fontSize: 14,
+    color: "black",
+    alignSelf: "center",
+    margin:10
   },
   navigator: {
     marginTop: 10,

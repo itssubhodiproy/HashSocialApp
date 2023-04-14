@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, Dimensions, Alert } from "react-native";
-import React, { useState, memo } from "react";
+import React, { useState, memo, useEffect } from "react";
 import BottomDrawer from "react-native-bottom-drawer-view";
 import BottomDrawerTab from "./BottomDrawer/BottomDrawer";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,6 +7,7 @@ import Badges from "./FeedScreen/Badges";
 import Metrics from "./FeedScreen/Metrics";
 import UserDetails from "./FeedScreen/UserDetails";
 import BottomBar from "./FeedScreen/BottomBar";
+import { firebase } from "../config/firebase";
 
 const CARD_WIDTH = Dimensions.get("window").width;
 const CARD_HEIGHT = Dimensions.get("window").height;
@@ -14,6 +15,7 @@ const CARD_HEIGHT = Dimensions.get("window").height;
 function Post({ item }) {
   const [canSee, setCanSee] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const seeHandler = () => {
     setCanSee(!canSee);
@@ -21,6 +23,28 @@ function Post({ item }) {
   const openDrawerHandler = () => {
     setOpenDrawer(!openDrawer);
   };
+
+  // retrive user name from firestore by user id
+  const getUser = async (userId) => {
+    const db = firebase.firestore();
+    // retrive user data from firestore where user id is equal to userId
+    const querySnapshot = await db
+      .collection("users")
+      .where("uid", "==", userId)
+      .limit(1)
+      .get();
+    // return user name
+    const user = querySnapshot.docs[0];
+    return user.data().firstName;
+  };
+
+  useEffect(() => {
+    // retrive user name from firestore by user id
+    getUser(item.uid).then((name) => {
+      // console.log(name);
+      setUserName(name);
+    });
+  }, []);
 
   return (
     <View>
@@ -32,8 +56,7 @@ function Post({ item }) {
         width={CARD_WIDTH}
         height={CARD_HEIGHT}
         style={styles.image}
-        source={{ uri: item }}
-        onPress={openDrawerHandler}
+        source={{ uri: item.photo }}
       ></Image>
       {!openDrawer && (
         <LinearGradient
@@ -49,7 +72,7 @@ function Post({ item }) {
           {/* recepie metrics */}
           <Metrics />
           {/* user profile */}
-          {!openDrawer && <UserDetails />}
+          {!openDrawer && <UserDetails userName={userName} />}
         </>
       )}
       {/* bottomBar */}
@@ -57,6 +80,7 @@ function Post({ item }) {
         <BottomBar
           seeHandler={seeHandler}
           canSee={canSee}
+          openDrawerHandler={openDrawerHandler}
         />
       )}
       {openDrawer && (
@@ -64,7 +88,7 @@ function Post({ item }) {
           containerHeight={CARD_HEIGHT / 2 + 100}
           onCollapsed={openDrawerHandler}
         >
-          <BottomDrawerTab />
+          <BottomDrawerTab title={item.title} description={item.description} />
         </BottomDrawer>
       )}
     </View>

@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 
-const BottomBar = ({ seeHandler, canSee }) => {
+const BottomBar = ({ seeHandler, canSee, openDrawerHandler }) => {
   const navigation = useNavigation();
 
   const __startCamera = async () => {
@@ -58,12 +58,12 @@ const BottomBar = ({ seeHandler, canSee }) => {
         </TouchableWithoutFeedback>
       </View>
       <View>
-        <Image
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/1827/1827504.png",
-          }}
-          style={styles.bottomBarIcon}
-        ></Image>
+        <TouchableWithoutFeedback onPress={openDrawerHandler}>
+          <Image
+            source={require("../../../assets/info.png")}
+            style={styles.bottomBarIcon}
+          ></Image>
+        </TouchableWithoutFeedback>
       </View>
       <View>
         <Image
