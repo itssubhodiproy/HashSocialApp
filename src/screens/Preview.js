@@ -7,7 +7,11 @@ const Preview = ({ route }) => {
   const { photo } = route.params;
   return (
     <View>
-      <Image source={{ uri: photo.uri }} style={{ height: "100%" }} />
+      <Image
+        // source={{ uri: photo.uri }}
+        source={{ uri: photo }}
+        style={{ height: "100%" }}
+      />
 
       <View style={styles.container}>
         <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>

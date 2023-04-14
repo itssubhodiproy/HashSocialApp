@@ -33,7 +33,7 @@ const Feed = () => {
           />
         )}
       />
-      {/* <StatusBar style="light"/> */}
+      <StatusBar style="light" backgroundColor="black" translucent={false}/>
     </>
   );
 };

@@ -60,10 +60,15 @@ function App() {
       initialRouteName="Dashboard"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen
+        name="Dashboard"
+        component={Dashboard}
+
+      />
       <Stack.Screen
         name="CameraScreen"
         component={CameraScreen}
+
       />
       <Stack.Screen
         name="Preview"

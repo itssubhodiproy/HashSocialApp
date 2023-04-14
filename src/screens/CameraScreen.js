@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   Alert,
   PermissionsAndroid,
+  StatusBar,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 const CameraScreen = () => {
+  const isFocused = useIsFocused();
   const { height } = useWindowDimensions();
   const width = height * 0.6;
   const [startCamera, setStartCamera] = useState(false);
@@ -20,15 +22,29 @@ const CameraScreen = () => {
   const [cameraFrontFace, setCameraFrontFace] = useState(false);
   const navigation = useNavigation();
 
+  const [startVideoRecording, setStartVideoRecording] = useState(false);
+
+  const RecordVideo = async () => {
+    setStartVideoRecording(true);
+  };
+  const SubmitVideo = async () => {
+    setStartVideoRecording(false);
+    console.log("video submitted");
+    // navigation.navigate("Preview", { video: true });
+  };
   // start camera function
   let camera;
 
   const ClickImage = async () => {
-    if (camera) {
-      let photo = await camera.takePictureAsync();
-      setStartCamera(false);
-      navigation.navigate("Preview", { photo: photo });
-    }
+    // if (camera) {
+    //   let photo = await camera.takePictureAsync();
+    //   setStartCamera(false);
+    //   navigation.navigate("Preview", { photo: photo });
+    // }
+    const photo = "https://s3.envato.com/files/243973398/FM7_8632_vert.jpg"
+    navigation.navigate("Preview", {
+      photo: photo
+    });
   };
 
   const requestCameraPermission = async () => {
@@ -85,12 +101,22 @@ const CameraScreen = () => {
                 style={styles.bottom_button}
               ></Image>
             </TouchableOpacity>
-            <TouchableOpacity onPress={ClickImage}>
-              <Image
-                source={require("../../assets/camera-click.png")}
-                style={styles.bottom_button}
-              ></Image>
-            </TouchableOpacity>
+            {!startVideoRecording ? (
+              <TouchableOpacity onPress={ClickImage} onLongPress={RecordVideo}>
+                <Image
+                  source={require("../../assets/camera-click.png")}
+                  style={styles.bottom_button}
+                ></Image>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={SubmitVideo}>
+                <Image
+                  source={require("../../assets/pause.png")}
+                  style={styles.bottom_button}
+                ></Image>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               onPress={() =>
                 setCameraFrontFace((cameraFrontFace) => !cameraFrontFace)
@@ -108,7 +134,7 @@ const CameraScreen = () => {
         </View>
       ) : (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             Please allow camera and microphone permission
@@ -120,6 +146,7 @@ const CameraScreen = () => {
           </TouchableOpacity>
         </View>
       )}
+      {/* <StatusBar style="light" backgroundColor="black" translucent={false} /> */}
     </>
   );
 };
