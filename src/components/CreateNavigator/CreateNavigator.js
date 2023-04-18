@@ -32,14 +32,14 @@ const CreateNavigator = () => {
         name="CreateInstructions"
         component={CreateInstructions}
         options={{
-          tabBarLabel: "Create Instructions",
+          tabBarLabel: "Instructions",
         }}
       />
       <Tab.Screen
         name="CreateIngredients"
         component={CreateIngredients}
         options={{
-          tabBarLabel: "Create Ingredients",
+          tabBarLabel: "Ingredients",
         }}
       />
     </Tab.Navigator>
