@@ -2,17 +2,17 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import NavigatorModal from "./NavigatorModal";
 
-export default function BottomDrawer({ title, description }) {
+export default function BottomDrawer({ item }) {
   return (
     <View style={styles.bottomDrawer}>
       {/* middle line of the drawer to drag it up and down */}
       <View style={styles.middleLine}></View>
       {/* recepie name */}
       <View>
-        <Text style={styles.heading}>{title}</Text>
+        <Text style={styles.heading}>{item.title}</Text>
       </View>
       <View>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
       <View style={styles.navigator}>
         <NavigatorModal />
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     alignSelf: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
   description: {
     fontSize: 14,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   navigator: {
     marginTop: 10,
     width: "100%",
-    height: "100%",
+    height: "75%",
   },
   activityBar: {
     width: "80%",
@@ -79,12 +79,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     alignSelf: "center",
-    borderRadius: 30,
+    borderRadius: 50,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
+    marginHorizontal: 30,
   },
   activityButton: {
     width: 25,
@@ -93,18 +94,19 @@ const styles = StyleSheet.create({
     // borderRadius: 50,
     margin: 10,
   },
-  bottomDrawer: {
-    width: "100%",
-    // height: "100%",
-    // backgroundColor: "white",
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
-    // display: "flex",
-    // flexDirection: "column",
-    // justifyContent: "flex-start",
-    // alignItems: "center",
-    // position: "absolute",
-    // bottom: 0,
-    zIndex: 100,
-  },
+  // bottomDrawer: {
+  //   width: "100%",
+  //   // height: "100%",
+  //   backgroundColor: "white",
+  //   borderTopLeftRadius: 30,
+  //   borderTopRightRadius: 30,
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   justifyContent: "flex-start",
+  //   alignItems: "center",
+  //   bottom:10,
+  //   // position: "absolute",
+  //   // bottom: 0,
+  //   // zIndex: 100,
+  // },
 });

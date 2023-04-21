@@ -4,8 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from "./src/config/firebase";
 
 // screens
-import LoginScreen from "./src/screens/LoginScreen";
-import RegisterScreen from "./src/screens/RegisterScreen";
+import LoginScreen from "./src/screens/AuthScreen/LoginScreen";
+import RegisterScreen from "./src/screens/AuthScreen/RegisterScreen";
 import Dashboard from "./src/screens/Dashboard";
 import { useEffect, useState } from "react";
 // import Header from "./src/components/Header";
@@ -14,6 +14,7 @@ import Preview from "./src/screens/Preview";
 import CreateScreen from "./src/screens/CreateScreen";
 import horizontalAnimation from "./src/components/horizontalAnimation";
 import verticalAnimation from "./src/components/verticalAnimation";
+import AuthScreens from "./src/screens/AuthScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ function App() {
   // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
+    // console.log(user);
     if (initializing) setInitializing(false);
   }
 
@@ -34,64 +36,20 @@ function App() {
 
   if (initializing) return null;
 
-  if (!user) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-    );
-  }
-
   return (
     <Stack.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName={user ? "Dashboard" : "AuthScreen"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
         name="Dashboard"
         component={Dashboard}
-
-      />
-      <Stack.Screen
-        name="CameraScreen"
-        component={CameraScreen}
-
-      />
-      <Stack.Screen
-        name="Preview"
-        component={Preview}
         options={horizontalAnimation}
       />
-      <Stack.Screen
-        name="CreateScreen"
-        component={CreateScreen}
-        options={verticalAnimation}
-      />
+      <Stack.Screen name="AuthScreen" component={AuthScreens} />
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default () => {
   return (

@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View,Image } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 
-const UserDetails = ({userName}) => {
+const UserDetails = ({ userName }) => {
   return (
     <View style={styles.UserProfile}>
       <Image
@@ -11,7 +11,7 @@ const UserDetails = ({userName}) => {
         }}
       />
       <View style={styles.userProfileDesc}>
-        <Text style={styles.mainText}>@{userName}</Text>
+        <Text style={styles.mainText}>@{userName ? userName : "Subh_cs"}</Text>
         <Text style={styles.userAchivements}> 54 Creations, 10 Forks</Text>
         <Text style={styles.nonMainText}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus,
@@ -31,13 +31,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 300,
     height: 130,
-    // backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    zIndex: 2,
   },
   userProfilePicture: {
     width: 50,

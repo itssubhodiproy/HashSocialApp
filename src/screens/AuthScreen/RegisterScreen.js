@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { firebase } from "../config/firebase";
+import { firebase } from "../../config/firebase";
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen({ navigation }) {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [firstName, setFirstName] = useState("");
@@ -27,7 +27,15 @@ export default function RegisterScreen({navigation}) {
     lastName = lastName.trim();
     // create user
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          const user = firebase.auth().currentUser;
+          return user.updateProfile({
+            displayName: firstName,
+          });
+        });
       await firebase
         .auth()
         .currentUser.sendEmailVerification({
@@ -47,6 +55,7 @@ export default function RegisterScreen({navigation}) {
       });
       // console.log(user)
       console.log("Registered with:", email);
+      navigation.navigate("LoginScreen");
     } catch (error) {
       alert(error.message);
       console.log(error.toString(error));
@@ -92,7 +101,9 @@ export default function RegisterScreen({navigation}) {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => handleRegistration(email, password, firstName, lastName)}
+          onPress={() =>
+            handleRegistration(email, password, firstName, lastName)
+          }
           style={styles.button}
         >
           <Text style={styles.buttonText}>Register</Text>
@@ -102,7 +113,7 @@ export default function RegisterScreen({navigation}) {
           Already Registered?{" "}
           <Text
             style={styles.loginText}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("LoginScreen")}
           >
             Login Now
           </Text>

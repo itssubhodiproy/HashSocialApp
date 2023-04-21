@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 130,
     justifyContent: "space-evenly",
-    zIndex: 2,
   },
   singleRecepieMetrics: {
     width: 60,

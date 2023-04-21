@@ -38,13 +38,13 @@ function Post({ item }) {
     return user.data().firstName;
   };
 
-  useEffect(() => {
-    // retrive user name from firestore by user id
-    getUser(item.uid).then((name) => {
-      // console.log(name);
-      setUserName(name);
-    });
-  }, []);
+  // useEffect(() => {
+  //   // retrive user name from firestore by user id
+  //   getUser(item.uid).then((name) => {
+  //     // console.log(name);
+  //     setUserName(name);
+  //   });
+  // }, []);
 
   return (
     <View>

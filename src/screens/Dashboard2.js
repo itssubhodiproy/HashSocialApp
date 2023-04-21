@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore"; // or 'firebase/firestore'
 import Feed from "./Feed";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import DummyScreen from "../components/DummyScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -65,21 +66,21 @@ const Dashboard = () => {
       />
       <Tab.Screen
         name="Following"
-        component={Feed}
+        component={DummyScreen}
         options={{
           tabBarLabel: "Following",
         }}
       />
       <Tab.Screen
         name="Recepies"
-        component={Feed}
+        component={DummyScreen}
         options={{
           tabBarLabel: "Recepies",
         }}
       />
       <Tab.Screen
         name="Discovery"
-        component={Feed}
+        component={DummyScreen}
         options={{
           tabBarLabel: "Discovery",
         }}

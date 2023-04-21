@@ -8,9 +8,10 @@ import {
   View,
   Image,
   Alert,
+  StatusBar
 } from "react-native";
-import { firebase } from "../config/firebase";
-import { StatusBar } from "expo-status-bar";
+import { firebase } from "../../config/firebase";
+// import { StatusBar } from "expo-status-bar";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ const LoginScreen = ({ navigation }) => {
         .auth()
         .signInWithEmailAndPassword(email, password);
       console.log("Logged in with:", email);
+      navigation.navigate("Dashboard");
     } catch (error) {
       Alert.alert(error.message);
       console.log(error.toString(error));
@@ -77,13 +79,13 @@ const LoginScreen = ({ navigation }) => {
           Don't have an account?{" "}
           <Text
             style={styles.registerText}
-            onPress={() => navigation.navigate("Register")}
+            onPress={() => navigation.navigate("RegisterScreen")}
           >
             Register Now
           </Text>
         </Text>
       </View>
-      <StatusBar style="auto" backgroundColor="white" translucent={false} />
+      <StatusBar barStyle="black" backgroundColor="white"/>
     </View>
   );
 };

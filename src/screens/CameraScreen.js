@@ -123,7 +123,7 @@ const CameraScreen = () => {
               }
             >
               <Image
-                source={require("../../assets/camera-switch.png")}
+                // source={require("../../assets/camera-reverse.png")}
                 style={styles.bottom_button}
               ></Image>
             </TouchableOpacity>
