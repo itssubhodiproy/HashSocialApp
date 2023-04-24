@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import CreateNavigator from "../../../components/CreateNavigator/CreateNavigator";
 import { firebase } from "../../../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { compressImage } from "../../../Api";
 
 const CreateScreen = ({ route }) => {
   // state of the post meterials
@@ -36,8 +37,11 @@ const CreateScreen = ({ route }) => {
     const db = firebase.firestore();
     const user = firebase.auth().currentUser;
     const storage = firebase.storage();
+    // compress the image before uploading
+    const compressedImage = await compressImage(photo.uri);
     // Upload the image to Firebase storage
-    const response = await fetch(photo.uri);
+    const response = await fetch(compressedImage.uri);
+    // image has been compressed and is ready to be uploaded
     const blob = await response.blob();
     const ref = storage.ref().child(`images/${user.uid}/${Date.now()}`);
     await ref.put(blob);

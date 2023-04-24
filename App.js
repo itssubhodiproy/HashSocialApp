@@ -4,14 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from "./src/config/firebase";
 
 // screens
-import LoginScreen from "./src/screens/AuthScreen/LoginScreen";
-import RegisterScreen from "./src/screens/AuthScreen/RegisterScreen";
 import Dashboard from "./src/screens/Dashboard";
 import { useEffect, useState } from "react";
-// import Header from "./src/components/Header";
-import CameraScreen from "./src/screens/CameraScreen";
-import Preview from "./src/screens/Preview";
-import CreateScreen from "./src/screens/CreateScreen";
 import horizontalAnimation from "./src/components/horizontalAnimation";
 import verticalAnimation from "./src/components/verticalAnimation";
 import AuthScreens from "./src/screens/AuthScreen";
