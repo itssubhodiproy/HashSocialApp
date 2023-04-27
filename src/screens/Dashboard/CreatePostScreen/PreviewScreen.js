@@ -4,12 +4,23 @@ import React from "react";
 const PreviewScreen = ({ route, navigation }) => {
   const { photo } = route.params;
 
+  const goBackToCamera = () => {
+    // removePhotoHandler();
+    navigation.navigate("OpenCamera")
+  };
+
+
   return (
     <View>
-      <Image source={{ uri: photo.uri }} style={{ height: "100%" }} />
+      <Image
+        source={{
+          uri: photo.uri,
+        }}
+        style={{ height: "100%" }}
+      />
 
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate("OpenCamera")}>
+        <TouchableOpacity onPress={goBackToCamera}>
           <Image
             source={require("../../../../assets/repeat.png")}
             style={styles.button}

@@ -4,13 +4,19 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CreateIngredients from "./CreateIngredients";
 import CreateInstructions from "./CreateInstructions";
 
-const CreateNavigator = () => {
+const CreateNavigator = ({
+  Instructions,
+  deleteInstruction,
+  updateInstruction,
+  changeCover,
+}) => {
   const Tab = createMaterialTopTabNavigator();
 
   return (
     <Tab.Navigator
       initialRouteName="CreateInstructions"
       screenOptions={{
+        swipeEnabled: false,
         tabBarLabelStyle: { fontSize: 10, fontWeight: "bold" },
         tabBarAndroidRipple: { borderless: false },
         tabBarIndicatorStyle: {
@@ -19,18 +25,25 @@ const CreateNavigator = () => {
           borderRadius: 10,
         },
         tabBarIndicatorContainerStyle: {
-          backgroundColor: "white",
+          backgroundColor: "transparent",
+          borderWidth: 0,
         },
         tabBarStyle: {
           backgroundColor: "white",
-          width:"100%",
-          borderRadius: 10,
         },
       }}
     >
       <Tab.Screen
         name="CreateInstructions"
-        component={CreateInstructions}
+        children={() => (
+          <CreateInstructions
+            Instructions={Instructions}
+            // addInstructionsToState={addInstructionsToState}
+            deleteInstruction={deleteInstruction}
+            updateInstruction={updateInstruction}
+            changeCover={changeCover}
+          />
+        )}
         options={{
           tabBarLabel: "Instructions",
         }}
@@ -40,6 +53,13 @@ const CreateNavigator = () => {
         component={CreateIngredients}
         options={{
           tabBarLabel: "Ingredients",
+        }}
+      />
+      <Tab.Screen
+        name="Category"
+        component={CreateIngredients}
+        options={{
+          tabBarLabel: "Category",
         }}
       />
     </Tab.Navigator>

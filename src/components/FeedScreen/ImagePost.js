@@ -20,9 +20,7 @@ import BottomBar from "./BottomBar";
 
 const ImagePost = ({ item, openBottomDrawer, toggleDrawer }) => {
   const [image, setImage] = useState({
-    uri: item
-      ? item.photoURL
-      : "https://m.timesofindia.com/photo/80045903/80045903.jpg",
+    uri: !item.coverImage ? "https://m.timesofindia.com/photo/80045903/80045903.jpg": item.coverImage,
   });
   const canSee = true;
   return (

@@ -33,7 +33,7 @@ const Posts = ({ item }) => {
       />
       {isBottomDrawerOpen && (
         <BottomDrawer
-          containerHeight={CARD_HEIGHT * 0.6}
+          containerHeight={CARD_HEIGHT * 0.8}
           onCollapsed={closeBottomDrawer}
         >
           <BottomDrawerTab item={item} />

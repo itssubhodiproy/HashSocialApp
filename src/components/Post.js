@@ -85,7 +85,7 @@ function Post({ item }) {
       )}
       {openDrawer && (
         <BottomDrawer
-          containerHeight={CARD_HEIGHT / 2 + 100}
+          containerHeight={CARD_HEIGHT / 2 + 200}
           onCollapsed={openDrawerHandler}
         >
           <BottomDrawerTab title={item.title} description={item.description} />

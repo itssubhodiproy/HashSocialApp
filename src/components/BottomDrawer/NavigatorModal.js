@@ -2,20 +2,22 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Ingredients from "./Ingredients";
-import Directions from "./Directions";
+import Directions from "./Instructions";
 import Comments from "./Comments";
+import Instructions from "./Instructions";
 
-const NavigatorModal = () => {
+const NavigatorModal = ({ item }) => {
   const Tab = createMaterialTopTabNavigator();
 
   return (
     <Tab.Navigator
-      initialRouteName="Ingredients"
+      initialRouteName="Instructions"
       screenOptions={{
+        swipeEnabled: false,
         tabBarLabelStyle: { fontSize: 10, fontWeight: "bold" },
         tabBarAndroidRipple: { borderless: false },
         tabBarIndicatorStyle: {
-          backgroundColor: "black",
+          backgroundColor: "#fc433c",
           height: 3,
           borderRadius: 10,
         },
@@ -29,17 +31,18 @@ const NavigatorModal = () => {
       }}
     >
       <Tab.Screen
+        name="Instructions"
+        // component={Instructions}
+        children={() => <Instructions item={item} />}
+        options={{
+          tabBarLabel: "Instructions",
+        }}
+      />
+      <Tab.Screen
         name="Ingredients"
         component={Ingredients}
         options={{
           tabBarLabel: "Ingredients",
-        }}
-      />
-      <Tab.Screen
-        name="Directions"
-        component={Directions}
-        options={{
-          tabBarLabel: "Directions",
         }}
       />
       <Tab.Screen

@@ -15,7 +15,7 @@ export default function BottomDrawer({ item }) {
         <Text style={styles.description}>{item.description}</Text>
       </View>
       <View style={styles.navigator}>
-        <NavigatorModal />
+        <NavigatorModal item={item} />
       </View>
       <View style={styles.activityBar}>
         <Image
@@ -94,19 +94,4 @@ const styles = StyleSheet.create({
     // borderRadius: 50,
     margin: 10,
   },
-  // bottomDrawer: {
-  //   width: "100%",
-  //   // height: "100%",
-  //   backgroundColor: "white",
-  //   borderTopLeftRadius: 30,
-  //   borderTopRightRadius: 30,
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   justifyContent: "flex-start",
-  //   alignItems: "center",
-  //   bottom:10,
-  //   // position: "absolute",
-  //   // bottom: 0,
-  //   // zIndex: 100,
-  // },
 });

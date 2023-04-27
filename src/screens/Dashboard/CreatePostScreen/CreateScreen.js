@@ -7,21 +7,37 @@ import {
   TouchableOpacity,
   View,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import CreateNavigator from "../../../components/CreateNavigator/CreateNavigator";
 import { firebase } from "../../../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { compressImage } from "../../../Api";
+import { useIsFocused } from "@react-navigation/native";
 
 const CreateScreen = ({ route }) => {
   // state of the post meterials
   const [recepieTitle, setRecepieTitle] = useState("");
   const [recepieDescription, setRecepieDescription] = useState("");
+  const [Instructions, setInstructions] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const [category, setCategory] = useState([]);
+
+  // const [coverImage, setCoverImage] = useState("");
+
+  // state of the loading
   const [isUploading, setIsUploading] = useState(false);
+  // navigation
   const navigation = useNavigation();
-  const photo = route.params.photo;
+  // IS FOCUSED HOOK
+  const isFocused = useIsFocused();
+
+  // photo from the camera
+  const addInstructionsToState = (instructions) => {
+    setInstructions((prevState) => [...prevState, instructions]);
+  };
 
   const SubmitPost = async () => {
     if (recepieTitle === "" || recepieDescription === "") {
@@ -32,45 +48,150 @@ const CreateScreen = ({ route }) => {
       return;
     }
     setIsUploading(true);
-    console.log("submitting post");
+    console.log("uploading post started..");
     // store the image into firebase storage and the get the downladable url
+    const coverImage = await uploadInstructions();
+    // upload the post to the firestore
     const db = firebase.firestore();
     const user = firebase.auth().currentUser;
-    const storage = firebase.storage();
+    // const storage = firebase.storage();
     // compress the image before uploading
-    const compressedImage = await compressImage(photo.uri);
+    // const compressedImage = await compressImage(photo.uri);
     // Upload the image to Firebase storage
-    const response = await fetch(compressedImage.uri);
+    // const response = await fetch(compressedImage.uri);
     // image has been compressed and is ready to be uploaded
-    const blob = await response.blob();
-    const ref = storage.ref().child(`images/${user.uid}/${Date.now()}`);
-    await ref.put(blob);
+    // const blob = await response.blob();
+    // const ref = storage.ref().child(`images/${user.uid}/${Date.now()}`);
+    // await ref.put(blob);
     // Get the user's username from Firestore
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const querySnapshot = await getDocs(q);
     const userRef = querySnapshot.docs[0].data();
-    console.log(userRef);
+    // console.log(userRef);
     // Get the download URL of the image
-    const downloadURL = await ref.getDownloadURL();
+    // const downloadURL = await ref.getDownloadURL();
     const docRef = await db.collection("posts").add({
       uid: user.uid,
       userName: userRef.firstName,
       title: recepieTitle,
       description: recepieDescription,
-      photoURL: downloadURL,
+      instructions: Instructions,
+      ingredients: ingredients,
+      category: category,
+      coverImage: coverImage,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
     console.log("Document written with ID: ", docRef.id);
     setIsUploading(false);
+    console.log("uploading post finished..");
     navigation.navigate("TopTabScreen");
   };
 
+  //upload every image from the instructions array to the firebase storage and then get the download url and store it in the instructions array
+  const uploadInstructions = async () => {
+    let coverImage = "";
+    // const db = firebase.firestore();
+    console.log("Instructions upload started..");
+    const user = firebase.auth().currentUser;
+    const storage = firebase.storage();
+    const newInstructions = [...Instructions];
+    for (let i = 0; i < newInstructions.length; i++) {
+      // compress the image before uploading
+      const compressedImage = await compressImage(
+        newInstructions[i].imageURL.uri
+      );
+      // Upload the image to Firebase storage
+      const response = await fetch(compressedImage.uri);
+      // image has been compressed and is ready to be uploaded
+      const blob = await response.blob();
+      const ref = storage
+        .ref()
+        .child(`images/${user.uid}/${recepieTitle}/${i + 1}`);
+      await ref.put(blob);
+      // Get the download URL of the image
+      const downloadURL = await ref.getDownloadURL();
+      newInstructions[i].imageURL = downloadURL;
+      // if cover image property true, changing the state of coverImage
+      if (newInstructions[i].isCoverImage) {
+        console.log("cover image set");
+        coverImage = newInstructions[i].imageURL;
+      }
+    }
+    setInstructions(newInstructions);
+    console.log("Instructions uploaded");
+    return coverImage;
+  };
+
+  // delete one item from the instructions by index
+  const deleteInstruction = (index) => {
+    const newInstructions = [...Instructions];
+    newInstructions.splice(index, 1);
+    setInstructions(newInstructions);
+  };
+
+  // update the instructions array text by index
+  const updateInstruction = (index, text) => {
+    const newInstructions = [...Instructions];
+    newInstructions[index].text = text;
+    setInstructions(newInstructions);
+  };
+
+  // based on the index of the instruction, set the cover image
+  const changeCover = (index) => {
+    const newInstructions = [...Instructions];
+    // change already set cover image to false
+    for (let i = 0; i < newInstructions.length; i++) {
+      if (newInstructions[i].isCoverImage) {
+        newInstructions[i].isCoverImage = false;
+      }
+    }
+    // set the new cover image
+    newInstructions[index].isCoverImage = true;
+    setInstructions(newInstructions);
+  };
+
+  // discard alert
+  const GoBackToTopTabScreen = () => {
+    Alert.alert(
+      "Discard Post",
+      "Are you sure you want to discard this post?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "Discard", onPress: () => navigation.navigate("TopTabScreen") },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  useEffect(() => {
+    if (isFocused && route.params?.photo) {
+      const instructionObject = {
+        id: Instructions.length + 1,
+        imageURL: route.params.photo,
+        text: "",
+        isCoverImage: false,
+      };
+      if (instructionObject.id === 1) {
+        instructionObject.isCoverImage = true;
+      }
+      addInstructionsToState(instructionObject);
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    console.log(Instructions);
+  }, [Instructions]);
+
   return (
-    <SafeAreaView>
+    <View>
       {!isUploading ? (
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={GoBackToTopTabScreen}>
               <Image
                 source={require("../../../../assets/black-back.png")}
                 style={styles.topIcons}
@@ -83,15 +204,12 @@ const CreateScreen = ({ route }) => {
               placeholder="Recepie's Title"
               maxLength={15}
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={GoBackToTopTabScreen}>
               <Image
                 source={require("../../../../assets/black-cross.png")}
                 style={styles.topIcons}
               ></Image>
             </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.description_heading}>Recepie Description</Text>
           </View>
           <View style={styles.description}>
             <TextInput
@@ -104,13 +222,18 @@ const CreateScreen = ({ route }) => {
             />
           </View>
           <View style={styles.navigator}>
-            <CreateNavigator />
+            <CreateNavigator
+              Instructions={Instructions}
+              deleteInstruction={deleteInstruction}
+              updateInstruction={updateInstruction}
+              changeCover={changeCover}
+            />
           </View>
           <View style={styles.submitButton}>
             <TouchableOpacity onPress={SubmitPost}>
               <Image
                 source={require("../../../../assets/hashlogo.png")}
-                style={{ width: 60, height: 60 }}
+                style={{ width: 50, height: 50 }}
               ></Image>
             </TouchableOpacity>
           </View>
@@ -126,7 +249,7 @@ const CreateScreen = ({ route }) => {
           <Text style={styles.loaderText}>Loading...</Text>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -137,9 +260,9 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: 20,
     width: "100%",
     height: "100%",
+    backgroundColor: "#fff",
   },
   topIcons: {
     width: 30,
@@ -151,6 +274,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    padding: 20,
   },
   header_mainText: {
     fontSize: 18,
@@ -165,22 +289,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   description: {
-    width: "100%",
     display: "flex",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e6e3e3",
+    paddingHorizontal: 20,
   },
   navigator: {
     width: "100%",
     height: "60%",
     marginTop: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: "#e0e0e0",
   },
   submitButton: {
     position: "absolute",
     bottom: 10,
     width: "100%",
-    height: "10%",
+    // height: "10%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

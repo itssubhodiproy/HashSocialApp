@@ -4,23 +4,46 @@ import { Camera, CameraType } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
 import { CARD_HEIGHT, CARD_WIDTH } from "../../../../Constants";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
 const OpenCamera = () => {
+  let isFocused = useIsFocused();
   const [flash, setFlash] = useState(false);
   const [cameraFrontFace, setCameraFrontFace] = useState(false);
   const [startVideoRecording, setStartVideoRecording] = useState(false);
-  const [photo, setPhoto] = useState(null);
+  const [photoFromCamera, setPhotoFromCamera] = useState(null);
+  const [photoFromGallery, setPhotoFromGallery] = useState(null);
+
   const navigation = useNavigation();
   let cameraRef;
 
-  let isFocused = useIsFocused();
+  const removePhotoHandler = () => {
+    if (photoFromCamera) {
+      setPhotoFromCamera(null);
+    } else {
+      setPhotoFromGallery(null);
+    }
+  };
 
   const ClickImage = async () => {
     console.log("Image Clicked");
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
-      setPhoto(photo);
-      navigation.navigate("PreviewScreen", { photo });
+      setPhotoFromCamera(photo);
+    }
+  };
+
+  const pickImageFromGallery = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [16, 9],
+      quality: 1,
+    });
+    // console.log(result.assets[0]);
+    if (!result.canceled) {
+      setPhotoFromGallery(result.assets[0]);
     }
   };
 
@@ -38,7 +61,21 @@ const OpenCamera = () => {
     navigation.navigate("TopTabScreen");
   };
 
-  console.log("isFocused", isFocused);
+  //console.log("isFocused", isFocused);
+
+  useEffect(() => {
+    console.log("isFocused", isFocused);
+    if (isFocused) {
+      setPhotoFromCamera(null);
+      setPhotoFromGallery(null);
+    }
+    if (photoFromCamera || photoFromGallery) {
+      let object = photoFromCamera ? photoFromCamera : photoFromGallery;
+      navigation.navigate("PreviewScreen", {
+        photo: object
+      });
+    }
+  }, [isFocused,photoFromCamera, photoFromGallery]);
 
   return (
     <View style={styles.container}>
@@ -59,11 +96,10 @@ const OpenCamera = () => {
                 : Camera.Constants.Type.back
             }
           />
-          {/* <Camera style={{ height: CARD_HEIGHT, width: CARD_WIDTH }} /> */}
           <View style={styles.bottombar}>
-            <TouchableOpacity onPress={() => setFlash((flash) => !flash)}>
+            <TouchableOpacity onPress={pickImageFromGallery}>
               <Image
-                source={require("../../../../../assets/camera-flash.png")}
+                source={require("../../../../../assets/gallery.png")}
                 style={styles.bottom_button}
               ></Image>
             </TouchableOpacity>
@@ -101,6 +137,14 @@ const OpenCamera = () => {
             <TouchableOpacity onPress={BackToTopTabScreen}>
               <Image
                 source={require("../../../../../assets/back.png")}
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.flash_button_position}>
+            <TouchableOpacity onPress={() => setFlash((flash) => !flash)}>
+              <Image
+                source={require("../../../../../assets/camera-flash.png")}
                 style={styles.bottom_button}
               ></Image>
             </TouchableOpacity>
@@ -151,5 +195,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
+  },
+  flash_button_position: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });

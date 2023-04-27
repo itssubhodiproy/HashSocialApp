@@ -17,6 +17,7 @@ import ProfileScreen from "./ProfileScreen";
 import CreatePostScreen from "./CreatePostScreen";
 import TopTabScreen from "./TopTabScreen";
 import SearchScreen from "./SearchScreen";
+import verticalAnimation from "../../components/verticalAnimation"
 
 const Stack = createStackNavigator();
 
@@ -30,7 +31,7 @@ const Dashboard = () => {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="TopTabScreen" component={TopTabScreen} />
-        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} options={verticalAnimation}/>
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen
           name="NotificationScreen"
