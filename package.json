@@ -31,7 +31,8 @@
     "react-native-screens": "~3.18.0",
     "react-native-swipe-list-view": "*",
     "react-native-tab-view": "^3.5.1",
-    "react-native-vector-icons": "^9.2.0"
+    "react-native-vector-icons": "^9.2.0",
+    "expo-updates": "~0.15.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -97,7 +97,7 @@ const CreateInstructions = ({
                 value={instruction.text}
                 onChangeText={updateInstruction.bind(this, index)}
                 placeholder="Add instruction details"
-                multiline
+                // multiline={true}
                 numberOfLines={4}
               ></TextInput>
             </View>

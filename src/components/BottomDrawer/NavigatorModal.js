@@ -40,7 +40,8 @@ const NavigatorModal = ({ item }) => {
       />
       <Tab.Screen
         name="Ingredients"
-        component={Ingredients}
+        // component={Ingredients}
+        children={() => <Ingredients item={item} />}
         options={{
           tabBarLabel: "Ingredients",
         }}

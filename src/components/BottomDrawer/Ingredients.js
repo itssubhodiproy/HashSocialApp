@@ -1,15 +1,76 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import React, { useState } from "react";
 
-const Ingredients = (props) => {
+const Ingredients = ({ item }) => {
+  const [Ingredients, setIngredients] = useState(item.ingredients);
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Ingredients</Text>
-      <Text style={styles.subtext}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-        voluptate, quod, quia, voluptates quas voluptatibus quibusdam
-      </Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={{
+            color: "#fc433c",
+            textDecorationLine: "underline",
+            fontWeight: "bold",
+          }}
+        >
+          Items
+        </Text>
+        <Text
+          style={{
+            color: "#fc433c",
+            textDecorationLine: "underline",
+            fontWeight: "bold",
+          }}
+        >
+          Quantity
+        </Text>
+      </View>
+      {Ingredients?.map((ingredient, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottomWidth: 2,
+              borderColor: "#e0e0e0",
+              margin: 15,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                // marginVertical: 10,
+              }}
+            >
+              <Text style={{ fontSize: 15, color: "grey" }}>{index + 1}: </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  flex: 1,
+                  flexWrap: "wrap",
+                }}
+              >
+                {ingredient.text}
+              </Text>
+            </View>
+            <Text>{ingredient.quantity}</Text>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 };
 

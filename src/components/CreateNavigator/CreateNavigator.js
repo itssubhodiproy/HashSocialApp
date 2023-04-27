@@ -9,6 +9,12 @@ const CreateNavigator = ({
   deleteInstruction,
   updateInstruction,
   changeCover,
+  addIngredientsToState,
+  Ingredients,
+  updateIngredientText,
+  incrementQuantity,
+  decrementQuantity,
+  deleteIngredients,
 }) => {
   const Tab = createMaterialTopTabNavigator();
 
@@ -50,7 +56,17 @@ const CreateNavigator = ({
       />
       <Tab.Screen
         name="CreateIngredients"
-        component={CreateIngredients}
+        // component={CreateIngredients}
+        children={() => (
+          <CreateIngredients
+            addIngredientsToState={addIngredientsToState}
+            Ingredients={Ingredients}
+            updateIngredientText={updateIngredientText}
+            deleteIngredients={deleteIngredients}
+            incrementQuantity={incrementQuantity}
+            decrementQuantity={decrementQuantity}
+          />
+        )}
         options={{
           tabBarLabel: "Ingredients",
         }}

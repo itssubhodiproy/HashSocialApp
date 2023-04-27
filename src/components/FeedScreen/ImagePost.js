@@ -20,7 +20,9 @@ import BottomBar from "./BottomBar";
 
 const ImagePost = ({ item, openBottomDrawer, toggleDrawer }) => {
   const [image, setImage] = useState({
-    uri: !item.coverImage ? "https://m.timesofindia.com/photo/80045903/80045903.jpg": item.coverImage,
+    uri: !item.coverImage
+      ? "https://m.timesofindia.com/photo/80045903/80045903.jpg"
+      : item.coverImage,
   });
   const canSee = true;
   return (
@@ -41,7 +43,7 @@ const ImagePost = ({ item, openBottomDrawer, toggleDrawer }) => {
 
       <Metrics />
       <Badges />
-      <UserDetails userName={item ? item.userName : "subh"} />
+      <UserDetails userName={item ? item.userName : "user"} />
 
       <BottomBar />
     </View>

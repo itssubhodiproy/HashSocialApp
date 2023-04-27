@@ -22,7 +22,7 @@ const CreateScreen = ({ route }) => {
   const [recepieTitle, setRecepieTitle] = useState("");
   const [recepieDescription, setRecepieDescription] = useState("");
   const [Instructions, setInstructions] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
+  const [Ingredients, setIngredients] = useState([]);
   const [category, setCategory] = useState([]);
 
   // const [coverImage, setCoverImage] = useState("");
@@ -33,6 +33,45 @@ const CreateScreen = ({ route }) => {
   const navigation = useNavigation();
   // IS FOCUSED HOOK
   const isFocused = useIsFocused();
+
+  // add an empty ingredient object and push it to the state
+  const addIngredientsToState = () => {
+    const ingredient = {
+      text: "",
+      quantity: 1,
+    };
+    const newIngredients = [...Ingredients, ingredient];
+    setIngredients(newIngredients);
+  };
+
+  // update ingredient text based on the index
+  const updateIngredientText = (index, text) => {
+    const newIngredients = [...Ingredients];
+    newIngredients[index].text = text;
+    setIngredients(newIngredients);
+  };
+
+  // increment the quantity of the ingredient by index
+  const incrementQuantity = (index) => {
+    const newIngredients = [...Ingredients];
+    newIngredients[index].quantity = newIngredients[index].quantity + 1;
+    setIngredients(newIngredients);
+  };
+
+  // decrement the quantity of the ingredient by index
+  const decrementQuantity = (index) => {
+    const newIngredients = [...Ingredients];
+    if (newIngredients[index].quantity > 1) {
+      newIngredients[index].quantity = newIngredients[index].quantity - 1;
+      setIngredients(newIngredients);
+    }
+  };
+
+  const deleteIngredients = (index) => {
+    const newIngredients = [...Ingredients];
+    newIngredients.splice(index, 1);
+    setIngredients(newIngredients);
+  };
 
   // photo from the camera
   const addInstructionsToState = (instructions) => {
@@ -54,29 +93,16 @@ const CreateScreen = ({ route }) => {
     // upload the post to the firestore
     const db = firebase.firestore();
     const user = firebase.auth().currentUser;
-    // const storage = firebase.storage();
-    // compress the image before uploading
-    // const compressedImage = await compressImage(photo.uri);
-    // Upload the image to Firebase storage
-    // const response = await fetch(compressedImage.uri);
-    // image has been compressed and is ready to be uploaded
-    // const blob = await response.blob();
-    // const ref = storage.ref().child(`images/${user.uid}/${Date.now()}`);
-    // await ref.put(blob);
-    // Get the user's username from Firestore
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const querySnapshot = await getDocs(q);
     const userRef = querySnapshot.docs[0].data();
-    // console.log(userRef);
-    // Get the download URL of the image
-    // const downloadURL = await ref.getDownloadURL();
     const docRef = await db.collection("posts").add({
       uid: user.uid,
       userName: userRef.firstName,
       title: recepieTitle,
       description: recepieDescription,
       instructions: Instructions,
-      ingredients: ingredients,
+      ingredients: Ingredients,
       category: category,
       coverImage: coverImage,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -184,7 +210,8 @@ const CreateScreen = ({ route }) => {
 
   useEffect(() => {
     console.log(Instructions);
-  }, [Instructions]);
+    console.log(Ingredients);
+  }, [Instructions, Ingredients]);
 
   return (
     <View>
@@ -202,7 +229,6 @@ const CreateScreen = ({ route }) => {
               value={recepieTitle}
               onChangeText={setRecepieTitle}
               placeholder="Recepie's Title"
-              maxLength={15}
             />
             <TouchableOpacity onPress={GoBackToTopTabScreen}>
               <Image
@@ -218,7 +244,6 @@ const CreateScreen = ({ route }) => {
               multiline={true}
               numberOfLines={5}
               placeholder="Enter the description here"
-              maxLength={180}
             />
           </View>
           <View style={styles.navigator}>
@@ -227,6 +252,12 @@ const CreateScreen = ({ route }) => {
               deleteInstruction={deleteInstruction}
               updateInstruction={updateInstruction}
               changeCover={changeCover}
+              addIngredientsToState={addIngredientsToState}
+              Ingredients={Ingredients}
+              incrementQuantity={incrementQuantity}
+              decrementQuantity={decrementQuantity}
+              updateIngredientText={updateIngredientText}
+              deleteIngredients={deleteIngredients}
             />
           </View>
           <View style={styles.submitButton}>
@@ -281,6 +312,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     borderWidth: 0,
     alignSelf: "center",
+    flex: 1,
+    textAlign: "center",
+    flexWrap: "wrap",
   },
   description_heading: {
     width: "100%",
