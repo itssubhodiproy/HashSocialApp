@@ -214,7 +214,7 @@ const CreateScreen = ({ route }) => {
   }, [Instructions, Ingredients]);
 
   return (
-    <View>
+    <SafeAreaView>
       {!isUploading ? (
         <View style={styles.container}>
           <View style={styles.header}>
@@ -280,7 +280,7 @@ const CreateScreen = ({ route }) => {
           <Text style={styles.loaderText}>Loading...</Text>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
