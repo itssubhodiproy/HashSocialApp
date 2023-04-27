@@ -68,11 +68,7 @@ const CreateInstructions = ({
     <SafeAreaView style={styles.container}>
       <ScrollView>
         {Instructions?.map((instruction, index) => (
-          <TouchableOpacity
-            onPress={() => DeleteRow(index)}
-            onLongPress={() => makeItCover(index)}
-            key={index}
-          >
+          <View key={index}>
             {/* cover image identification */}
             <View style={styles.instructions}>
               {instruction.isCoverImage ? (
@@ -83,15 +79,20 @@ const CreateInstructions = ({
                   ></Image>
                 </View>
               ) : null}
-              
+
               {/* /// */}
               <Text style={styles.instruction_id}>{index + 1}</Text>
-              <View style={styles.instructions_image_view}>
-                <Image
-                  source={{ uri: instruction.imageURL.uri }}
-                  style={styles.instruction_image}
-                ></Image>
-              </View>
+              <TouchableOpacity
+                onPress={() => DeleteRow(index)}
+                onLongPress={() => makeItCover(index)}
+              >
+                <View style={styles.instructions_image_view}>
+                  <Image
+                    source={{ uri: instruction.imageURL.uri }}
+                    style={styles.instruction_image}
+                  ></Image>
+                </View>
+              </TouchableOpacity>
               <TextInput
                 style={styles.instruction_text_view}
                 value={instruction.text}
@@ -101,7 +102,7 @@ const CreateInstructions = ({
                 numberOfLines={4}
               ></TextInput>
             </View>
-          </TouchableOpacity>
+          </View>
         ))}
         <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
           <View style={styles.instructions}>
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
   },
   instruction_text_view: {
     width: "100%",
-    fontSize: 10,
+    fontSize: 15,
     flex: 1,
     flexWrap: "wrap",
   },
