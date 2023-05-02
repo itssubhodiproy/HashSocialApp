@@ -6,7 +6,7 @@ import {
   ImageBackground,
   Text,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { CARD_HEIGHT, CARD_WIDTH } from "../../Constants";
 import {
@@ -17,45 +17,70 @@ import Metrics from "./Metrics";
 import Badges from "./Badges";
 import UserDetails from "./UserDetails";
 import BottomBar from "./BottomBar";
+import { Video } from "expo-av";
+import { useIsFocused } from "@react-navigation/native";
 
-const ImagePost = ({ item, openBottomDrawer, toggleDrawer }) => {
+const Post = ({
+  item,
+  toggleDrawer,
+  shouldPlay, index, focusedIndex
+}) => {
   const [image, setImage] = useState({
-    uri: !item.coverImage
+    uri: !item.coverURL
       ? "https://m.timesofindia.com/photo/80045903/80045903.jpg"
-      : item.coverImage,
+      : item.coverURL,
   });
-  const canSee = true;
+
+
   return (
     <View>
       <TouchableWithoutFeedback onPress={toggleDrawer}>
-        <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-          <LinearGradient
-            colors={[
-              "rgba(0,0,0,1)",
-              "transparent",
-              "transparent",
-              "rgba(0,0,0,1)",
-            ]}
-            style={styles.gradient}
+        {item.coverType === "image" ? (
+          <ImageBackground
+            source={image}
+            resizeMode="cover"
+            style={styles.image}
+          >
+            <LinearGradient
+              colors={[
+                "rgba(0,0,0,1)",
+                "transparent",
+                "transparent",
+                "rgba(0,0,0,1)",
+              ]}
+              style={styles.gradient}
+            />
+          </ImageBackground>
+        ) : (
+          <Video
+            source={{ uri: item.coverURL }}
+            style={styles.video}
+            resizeMode="cover"
+            isLooping
+            shouldPlay={focusedIndex===index}
+            isMuted={false}
           />
-        </ImageBackground>
+        )}
       </TouchableWithoutFeedback>
 
       <Metrics />
       <Badges />
       <UserDetails userName={item ? item.userName : "user"} />
-
       <BottomBar />
     </View>
   );
 };
 
-export default ImagePost;
+export default Post;
 
 const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "center",
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+  },
+  video: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
   },

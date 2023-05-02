@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import CreateNavigator from "../../../components/CreateNavigator/CreateNavigator";
 import { firebase } from "../../../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { compressImage } from "../../../Api";
+import { compressImage, compressVideo, getFileType } from "../../../Api";
 import { useIsFocused } from "@react-navigation/native";
 
 const CreateScreen = ({ route }) => {
@@ -89,7 +89,7 @@ const CreateScreen = ({ route }) => {
     setIsUploading(true);
     console.log("uploading post started..");
     // store the image into firebase storage and the get the downladable url
-    const coverImage = await uploadInstructions();
+    const { coverURL, coverType } = await uploadInstructions();
     // upload the post to the firestore
     const db = firebase.firestore();
     const user = firebase.auth().currentUser;
@@ -104,7 +104,8 @@ const CreateScreen = ({ route }) => {
       instructions: Instructions,
       ingredients: Ingredients,
       category: category,
-      coverImage: coverImage,
+      coverURL: coverURL,
+      coverType: coverType,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
     console.log("Document written with ID: ", docRef.id);
@@ -115,37 +116,58 @@ const CreateScreen = ({ route }) => {
 
   //upload every image from the instructions array to the firebase storage and then get the download url and store it in the instructions array
   const uploadInstructions = async () => {
-    let coverImage = "";
-    // const db = firebase.firestore();
+    let coverURL = "";
+    let coverType = "";
     console.log("Instructions upload started..");
     const user = firebase.auth().currentUser;
     const storage = firebase.storage();
     const newInstructions = [...Instructions];
     for (let i = 0; i < newInstructions.length; i++) {
-      // compress the image before uploading
-      const compressedImage = await compressImage(
-        newInstructions[i].imageURL.uri
-      );
-      // Upload the image to Firebase storage
-      const response = await fetch(compressedImage.uri);
-      // image has been compressed and is ready to be uploaded
-      const blob = await response.blob();
-      const ref = storage
-        .ref()
-        .child(`images/${user.uid}/${recepieTitle}/${i + 1}`);
-      await ref.put(blob);
-      // Get the download URL of the image
-      const downloadURL = await ref.getDownloadURL();
-      newInstructions[i].imageURL = downloadURL;
-      // if cover image property true, changing the state of coverImage
-      if (newInstructions[i].isCoverImage) {
-        console.log("cover image set");
-        coverImage = newInstructions[i].imageURL;
+      const resourceType = getFileType(newInstructions[i].fileURL);
+      let compressedResource;
+      console.log(1);
+      if (resourceType === "image") {
+        // compress the image before uploading
+        compressedResource = await compressImage(newInstructions[i].fileURL);
+      } else if (resourceType === "video") {
+        // compress the video before uploading
+        let videoObject = {
+          uri: newInstructions[i].fileURL,
+          name: "video.mp4",
+          type: "video/mp4",
+        };
+        compressedResource = videoObject;
       }
+      console.log(2);
+      // upload the compressed resource to Firebase storage in the correct folder based on the file type
+      const response = await fetch(compressedResource.uri);
+      const blob = await response.blob();
+      let storageRef;
+      console.log(3);
+      if (resourceType === "image") {
+        storageRef = storage
+          .ref()
+          .child(`${user.uid}/${recepieTitle}/images/${i + 1}`);
+      } else if (resourceType === "video") {
+        storageRef = storage
+          .ref()
+          .child(`${user.uid}/${recepieTitle}/videos/${i + 1}`);
+      }
+      console.log(4);
+      await storageRef.put(blob);
+      const downloadURL = await storageRef.getDownloadURL();
+      newInstructions[i].fileURL = downloadURL;
+      console.log(5);
+      if (newInstructions[i].isCover) {
+        console.log("cover image set");
+        coverURL = newInstructions[i].fileURL;
+        coverType = resourceType;
+      }
+      console.log(6);
     }
     setInstructions(newInstructions);
     console.log("Instructions uploaded");
-    return coverImage;
+    return { coverURL, coverType };
   };
 
   // delete one item from the instructions by index
@@ -194,15 +216,15 @@ const CreateScreen = ({ route }) => {
   };
 
   useEffect(() => {
-    if (isFocused && route.params?.photo) {
+    if (isFocused && route.params?.cameraFile) {
       const instructionObject = {
         id: Instructions.length + 1,
-        imageURL: route.params.photo,
+        fileURL: route.params.cameraFile.uri,
         text: "",
-        isCoverImage: false,
+        isCover: false,
       };
       if (instructionObject.id === 1) {
-        instructionObject.isCoverImage = true;
+        instructionObject.isCover = true;
       }
       addInstructionsToState(instructionObject);
     }

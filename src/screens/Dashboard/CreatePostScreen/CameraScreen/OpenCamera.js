@@ -10,20 +10,24 @@ const OpenCamera = () => {
   let isFocused = useIsFocused();
   const [flash, setFlash] = useState(false);
   const [cameraFrontFace, setCameraFrontFace] = useState(false);
-  const [startVideoRecording, setStartVideoRecording] = useState(false);
+
   const [photoFromCamera, setPhotoFromCamera] = useState(null);
   const [photoFromGallery, setPhotoFromGallery] = useState(null);
 
+  const [videoFromCamera, setVideoFromCamera] = useState(null);
+  const [videoFromGallery, setVideoFromGallery] = useState(null);
+
+  // video recording started
+  // First, we declare a new state to keep track of the video recording duration
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  // We add a new timer state that starts and stops based on the user's action
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [timerId, setTimerId] = useState(null);
+
+  const [startVideo, setStartVideo] = useState(false);
+
   const navigation = useNavigation();
   let cameraRef;
-
-  const removePhotoHandler = () => {
-    if (photoFromCamera) {
-      setPhotoFromCamera(null);
-    } else {
-      setPhotoFromGallery(null);
-    }
-  };
 
   const ClickImage = async () => {
     console.log("Image Clicked");
@@ -47,35 +51,88 @@ const OpenCamera = () => {
     }
   };
 
-  const RecordVideo = () => {
-    console.log("Video Recording");
-    setStartVideoRecording(true);
+  const startVideoRecording = async () => {
+    if (cameraRef) {
+      setStartVideo(true);
+      // Now we start the timer when video recording starts
+      setTimerRunning(true);
+      const video = await cameraRef.recordAsync({
+        VideoQuality: ["1080p"],
+        maxDuration: 60,
+        videoBitrate: 3.5 * 1000 * 1000,
+      });
+      setVideoFromCamera(video);
+    }
   };
-
-  const SubmitVideo = () => {
-    console.log("Video Submitted");
-    setStartVideoRecording(false);
+  const stopVideoRecording = async () => {
+    if (cameraRef) {
+      setStartVideo(false);
+      cameraRef.stopRecording();
+      // And stop the timer when video recording stops
+      setTimerRunning(false);
+    }
+  };
+  // This function will be called repeatedly by the timer to update the recording duration
+  const updateRecordingDuration = () => {
+    setRecordingDuration((duration) => duration + 1);
+  };
+  const handlePressIn = () => {
+    // If the user presses the button and timer is not running, start video recording
+    if (!timerRunning) {
+      startVideoRecording();
+    }
+    // Start the timer (if it is not already running)
+    setTimerRunning(true);
+    // Start updating the recording duration every second
+    const timerId = setInterval(updateRecordingDuration, 1000);
+    setTimerId(timerId);
+  };
+  const handlePressOut = () => {
+    // Stop video recording if it is currently running
+    if (startVideo) {
+      stopVideoRecording();
+    }
+    // Stop the timer and reset the recording duration
+    clearInterval(timerId);
+    setRecordingDuration(0);
+    setTimerRunning(false);
   };
 
   const BackToTopTabScreen = () => {
     navigation.navigate("TopTabScreen");
   };
 
-  //console.log("isFocused", isFocused);
-
+  // this useEffect will run when the screen is focused
   useEffect(() => {
-    console.log("isFocused", isFocused);
+    console.log("isFocused CameraScreen", isFocused);
     if (isFocused) {
       setPhotoFromCamera(null);
       setPhotoFromGallery(null);
+      setVideoFromCamera(null);
+      setVideoFromGallery(null);
     }
-    if (photoFromCamera || photoFromGallery) {
-      let object = photoFromCamera ? photoFromCamera : photoFromGallery;
+    if (
+      photoFromCamera ||
+      photoFromGallery ||
+      videoFromCamera ||
+      videoFromGallery
+    ) {
+      let object =
+        photoFromCamera ||
+        photoFromGallery ||
+        videoFromCamera ||
+        videoFromGallery;
       navigation.navigate("PreviewScreen", {
-        photo: object
+        cameraFile: object,
       });
     }
-  }, [isFocused,photoFromCamera, photoFromGallery]);
+  }, [
+    isFocused,
+    photoFromCamera,
+    photoFromGallery,
+    videoFromCamera,
+    videoFromGallery,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -103,21 +160,32 @@ const OpenCamera = () => {
                 style={styles.bottom_button}
               ></Image>
             </TouchableOpacity>
-            {!startVideoRecording ? (
-              <TouchableOpacity onPress={ClickImage} onLongPress={RecordVideo}>
-                <Image
-                  source={require("../../../../../assets/camera-click.png")}
-                  style={styles.bottom_button}
-                ></Image>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={SubmitVideo}>
-                <Image
-                  source={require("../../../../../assets/pause.png")}
-                  style={styles.bottom_button}
-                ></Image>
-              </TouchableOpacity>
-            )}
+
+            <TouchableOpacity onPress={ClickImage}>
+              <Image
+                source={require("../../../../../assets/camera-click.png")}
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              // onPressIn={handlePressIn}
+              // onPressOut={handlePressOut}
+              onPress={!timerRunning ? handlePressIn : handlePressOut}
+            >
+              <Image
+                source={
+                  !timerRunning
+                    ? {
+                        uri: "https://cdn-icons-png.flaticon.com/512/1073/1073705.png",
+                      }
+                    : {
+                        uri: "https://cdn-icons-png.flaticon.com/512/715/715343.png",
+                      }
+                }
+                style={styles.bottom_button}
+              ></Image>
+            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() =>
@@ -149,6 +217,20 @@ const OpenCamera = () => {
               ></Image>
             </TouchableOpacity>
           </View>
+          {startVideo && (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 100,
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 20 }}>
+                {recordingDuration}
+              </Text>
+            </View>
+          )}
         </>
       )}
     </View>

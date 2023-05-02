@@ -5,7 +5,7 @@ const Instructions = ({ item }) => {
   const [instructions, setInstructions] = useState(item.instructions);
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {instructions.map((instruction, index) => {
+      {instructions?.map((instruction, index) => {
         return (
           <View
             key={index}
@@ -21,7 +21,7 @@ const Instructions = ({ item }) => {
             <Text style={styles.subtext}>{index + 1}.</Text>
             <Image
               style={{ width: 60, height: 60, margin: 10, borderWidth: 2 }}
-              source={{ uri: instruction.imageURL }}
+              source={{ uri: instruction.fileURL }}
             />
             <Text
               style={{

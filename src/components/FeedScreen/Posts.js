@@ -7,9 +7,7 @@ import BottomDrawerTab from "../BottomDrawer/BottomDrawer";
 import BottomDrawer from "react-native-bottom-drawer-view";
 import { CARD_HEIGHT } from "../../Constants";
 
-const Stack = createStackNavigator();
-
-const Posts = ({ item }) => {
+const Posts = ({ item, focusedIndex, index}) => {
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState(false);
 
   const openBottomDrawer = () => {
@@ -30,6 +28,8 @@ const Posts = ({ item }) => {
         item={item}
         openBottomDrawer={openBottomDrawer}
         toggleDrawer={toggleDrawer}
+        focusedIndex={focusedIndex}
+        index={index}
       />
       {isBottomDrawerOpen && (
         <BottomDrawer

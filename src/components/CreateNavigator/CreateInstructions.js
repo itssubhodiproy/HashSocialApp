@@ -71,7 +71,7 @@ const CreateInstructions = ({
           <View key={index}>
             {/* cover image identification */}
             <View style={styles.instructions}>
-              {instruction.isCoverImage ? (
+              {instruction.isCover ? (
                 <View style={styles.cover}>
                   <Image
                     source={require("../../../assets/cover-star.png")}
@@ -88,7 +88,7 @@ const CreateInstructions = ({
               >
                 <View style={styles.instructions_image_view}>
                   <Image
-                    source={{ uri: instruction.imageURL.uri }}
+                    source={{ uri: instruction.fileURL }}
                     style={styles.instruction_image}
                   ></Image>
                 </View>
@@ -98,7 +98,7 @@ const CreateInstructions = ({
                 value={instruction.text}
                 onChangeText={updateInstruction.bind(this, index)}
                 placeholder="Add instruction details"
-                // multiline={true}
+                multiline={true}
                 numberOfLines={4}
               ></TextInput>
             </View>

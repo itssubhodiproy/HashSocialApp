@@ -1,23 +1,37 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { Video } from "expo-av";
 
 const PreviewScreen = ({ route, navigation }) => {
-  const { photo } = route.params;
+  const { cameraFile } = route.params;
+
+  const fileExtension = cameraFile.uri.split(".").pop();
+  const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+  const isImage = imageExtensions.includes(fileExtension);
 
   const goBackToCamera = () => {
     // removePhotoHandler();
-    navigation.navigate("OpenCamera")
+    navigation.navigate("OpenCamera");
   };
-
 
   return (
     <View>
-      <Image
-        source={{
-          uri: photo.uri,
-        }}
-        style={{ height: "100%" }}
-      />
+      {isImage ? (
+        <Image
+          source={{
+            uri: cameraFile.uri,
+          }}
+          style={{ height: "100%" }}
+        />
+      ) : (
+        <Video
+          source={{ uri: cameraFile.uri }}
+          style={{ height: "100%" }}
+          shouldPlay
+          isLooping
+          resizeMode="cover"
+        />
+      )}
 
       <View style={styles.container}>
         <TouchableOpacity onPress={goBackToCamera}>
@@ -27,7 +41,7 @@ const PreviewScreen = ({ route, navigation }) => {
           ></Image>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("CreateScreen", { photo: photo })}
+          onPress={() => navigation.navigate("CreateScreen", { cameraFile: cameraFile })}
         >
           <Image
             source={require("../../../../assets/hashlogo.png")}

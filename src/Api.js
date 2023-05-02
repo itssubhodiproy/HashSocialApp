@@ -3,6 +3,9 @@ import { firebase } from "./config/firebase";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { Image } from "react-native";
 import { CARD_HEIGHT, CARD_WIDTH } from "./Constants";
+import * as VideoThumbnails from "expo-video-thumbnails";
+import * as FileSystem from "expo-file-system";
+import { Video } from "expo-av";
 
 export const getPost = () => {
   const markers = [
@@ -48,47 +51,37 @@ export const compressImage = async (uri, format = SaveFormat.PNG) => {
   // return: { name, type, width, height, uri }
 };
 
-export const Instructions = [
-  {
-    id: 1,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL:
-      "https://nationaltoday.com/wp-content/uploads/2020/06/Soul-Food-1-1.jpg",
-  },
-  {
-    id: 2,
-    text: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32.",
-    imageURL:
-      "https://media.self.com/photos/61096783e8a6e3edda24d8e8/1:1/w_3840,h_3840,c_limit/GettyImages-723523393%20(1).jpg",
-  },
-  {
-    id: 3,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-  {
-    id: 4,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-  {
-    id: 5,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-  {
-    id: 6,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-  {
-    id: 7,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-  {
-    id: 8,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    imageURL: "https://thumbs.dreamstime.com/z/number-1-made-food-26501131.jpg",
-  },
-];
+export const getFileType = (uri) => {
+  const extension = uri.split(".").pop();
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
+  const videoExtensions = ["mp4", "mov", "avi"];
+
+  if (imageExtensions.includes(extension)) {
+    return "image";
+  } else if (videoExtensions.includes(extension)) {
+    return "video";
+  } else {
+    return "unknown";
+  }
+};
+
+export const compressVideo = async (videoUri) => {
+  try {
+    // generate a thumbnail image for the video
+    const { uri } = await VideoThumbnails.getThumbnailAsync(videoUri);
+
+    // determine the output file path and name
+    const outputFileName = `${FileSystem.documentDirectory}compressed.mp4`;
+
+    // use the handleVideo method to compress the video and save to local file system
+    const source = { uri, type: "video/mp4" };
+    const destination = { uri: outputFileName, type: "video/mp4" };
+    const result = await Video.compressAsync(source, destination, {
+      quality: Video.QUALITY_MEDIUM,
+      maxDuration: 60, // limit the maximum duration of the compressed video to 60 seconds
+    });
+    return { uri: result.uri, width: result.width, height: result.height };
+  } catch (error) {
+    console.error(error);
+  }
+};
