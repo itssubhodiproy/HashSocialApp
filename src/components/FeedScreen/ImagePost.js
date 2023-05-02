@@ -20,47 +20,55 @@ import BottomBar from "./BottomBar";
 import { Video } from "expo-av";
 import { useIsFocused } from "@react-navigation/native";
 
-const Post = ({
-  item,
-  toggleDrawer,
-  shouldPlay, index, focusedIndex
-}) => {
+const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
   const [image, setImage] = useState({
     uri: !item.coverURL
       ? "https://m.timesofindia.com/photo/80045903/80045903.jpg"
       : item.coverURL,
   });
 
+  const [videoPaused, setVideoPaused] = useState(false);
+
+  const playVideo = () => {
+    setVideoPaused(false);
+  };
+
+  const pauseVideo = () => {
+    setVideoPaused(true);
+  };
 
   return (
     <View>
-      <TouchableWithoutFeedback onPress={toggleDrawer}>
+      <TouchableWithoutFeedback
+        onPress={toggleDrawer}
+        onPressIn={pauseVideo}
+        // onPressOut={playVideo}
+      >
         {item.coverType === "image" ? (
           <ImageBackground
             source={image}
             resizeMode="cover"
             style={styles.image}
-          >
-            <LinearGradient
-              colors={[
-                "rgba(0,0,0,1)",
-                "transparent",
-                "transparent",
-                "rgba(0,0,0,1)",
-              ]}
-              style={styles.gradient}
-            />
-          </ImageBackground>
+          />
         ) : (
           <Video
             source={{ uri: item.coverURL }}
             style={styles.video}
             resizeMode="cover"
             isLooping
-            shouldPlay={focusedIndex===index}
+            shouldPlay={focusedIndex === index}
             isMuted={false}
           />
         )}
+        <LinearGradient
+          colors={[
+            "rgba(0,0,0,1)",
+            "transparent",
+            "transparent",
+            "rgba(0,0,0,1)",
+          ]}
+          style={[styles.gradient, StyleSheet.absoluteFillObject]}
+        />
       </TouchableWithoutFeedback>
 
       <Metrics />

@@ -231,8 +231,6 @@ const CreateScreen = ({ route }) => {
   }, [isFocused]);
 
   useEffect(() => {
-    console.log(Instructions);
-    console.log(Ingredients);
   }, [Instructions, Ingredients]);
 
   return (
