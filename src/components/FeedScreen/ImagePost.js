@@ -27,21 +27,14 @@ const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
       : item.coverURL,
   });
 
-  const [videoPaused, setVideoPaused] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const playVideo = () => {
-    setVideoPaused(false);
-  };
-
-  const pauseVideo = () => {
-    setVideoPaused(true);
-  };
 
   return (
     <View>
       <TouchableWithoutFeedback
         onPress={toggleDrawer}
-        onPressIn={pauseVideo}
+        // onPressIn={pauseVideo}
         // onPressOut={playVideo}
       >
         {item.coverType === "image" ? (
@@ -51,14 +44,39 @@ const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
             style={styles.image}
           />
         ) : (
-          <Video
-            source={{ uri: item.coverURL }}
-            style={styles.video}
-            resizeMode="cover"
-            isLooping
-            shouldPlay={focusedIndex === index}
-            isMuted={false}
-          />
+          <>
+            <Video
+              source={{ uri: item.coverURL }}
+              style={styles.video}
+              resizeMode="cover"
+              isLooping
+              shouldPlay={focusedIndex === index}
+              isMuted={false}
+              onLoadStart={() => {
+                setIsLoading(true);
+              }}
+              onLoad={() => {
+                setIsLoading(false);
+              }}
+            />
+            {isLoading && (
+              <View
+                style={{
+                  position: "absolute",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Image
+                  source={{ uri: "https://i.gifer.com/ZZ5H.gif" }}
+                  style={{ width: 80, height: 80, resizeMode: "contain" }}
+                ></Image>
+              </View>
+            )}
+          </>
         )}
         <LinearGradient
           colors={[
