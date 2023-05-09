@@ -18,14 +18,14 @@ const CreateScreen = ({ route }) => {
   const photo = route.params.photo;
 
   // state of the post meterials
-  const [recepieTitle, setRecepieTitle] = useState("");
-  const [recepieDescription, setRecepieDescription] = useState("");
+  const [recipeTitle, setRecipeTitle] = useState("");
+  const [recipeDescription, setRecipeDescription] = useState("");
 
   const SubmitPost = async () => {
-    if (recepieTitle === "" || recepieDescription === "") {
+    if (recipeTitle === "" || recipeDescription === "") {
       Alert.alert(
         "Please fill all the fields",
-        "For posting recepie, title and description is required"
+        "For posting recipe, title and description is required"
       );
       return;
     }
@@ -34,8 +34,8 @@ const CreateScreen = ({ route }) => {
     const uid = user.uid;
     const docRef = await db.collection("posts").add({
       uid: uid,
-      title: recepieTitle,
-      description: recepieDescription,
+      title: recipeTitle,
+      description: recipeDescription,
       photo: photo,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -55,10 +55,9 @@ const CreateScreen = ({ route }) => {
           </TouchableOpacity>
           <TextInput
             style={styles.header_mainText}
-            value={recepieTitle}
-            onChangeText={setRecepieTitle}
-            placeholder="Recepie's Title"
-            maxLength={15}
+            value={recipeTitle}
+            onChangeText={setRecipeTitle}
+            placeholder="Recipe's Title"
           />
           <TouchableOpacity>
             <Image
@@ -67,17 +66,13 @@ const CreateScreen = ({ route }) => {
             ></Image>
           </TouchableOpacity>
         </View>
-        <View>
-          <Text style={styles.description_heading}>Recepie Description</Text>
-        </View>
         <View style={styles.description}>
           <TextInput
-            value={recepieDescription}
-            onChangeText={setRecepieDescription}
+            value={recipeDescription}
+            onChangeText={setRecipeDescription}
             multiline={true}
             numberOfLines={5}
             placeholder="Enter the description here"
-            maxLength={180}
           />
         </View>
         <View style={styles.navigator}>

@@ -19,8 +19,8 @@ import { useIsFocused } from "@react-navigation/native";
 
 const CreateScreen = ({ route }) => {
   // state of the post meterials
-  const [recepieTitle, setRecepieTitle] = useState("");
-  const [recepieDescription, setRecepieDescription] = useState("");
+  const [recipeTitle, setRecipeTitle] = useState("");
+  const [recipeDescription, setRecipeDescription] = useState("");
   const [Instructions, setInstructions] = useState([]);
   const [Ingredients, setIngredients] = useState([]);
   const [category, setCategory] = useState([]);
@@ -79,10 +79,10 @@ const CreateScreen = ({ route }) => {
   };
 
   const SubmitPost = async () => {
-    if (recepieTitle === "" || recepieDescription === "") {
+    if (recipeTitle === "" || recipeDescription === "") {
       Alert.alert(
         "Please fill all the fields",
-        "For posting recepie, title and description is required"
+        "For posting recipe, title and description is required"
       );
       return;
     }
@@ -99,8 +99,8 @@ const CreateScreen = ({ route }) => {
     const docRef = await db.collection("posts").add({
       uid: user.uid,
       userName: userRef.firstName,
-      title: recepieTitle,
-      description: recepieDescription,
+      title: recipeTitle,
+      description: recipeDescription,
       instructions: Instructions,
       ingredients: Ingredients,
       category: category,
@@ -147,11 +147,11 @@ const CreateScreen = ({ route }) => {
       if (resourceType === "image") {
         storageRef = storage
           .ref()
-          .child(`${user.uid}/${recepieTitle}/images/${i + 1}`);
+          .child(`${user.uid}/${recipeTitle}/images/${i + 1}`);
       } else if (resourceType === "video") {
         storageRef = storage
           .ref()
-          .child(`${user.uid}/${recepieTitle}/videos/${i + 1}`);
+          .child(`${user.uid}/${recipeTitle}/videos/${i + 1}`);
       }
       console.log(4);
       await storageRef.put(blob);
@@ -246,9 +246,9 @@ const CreateScreen = ({ route }) => {
             </TouchableOpacity>
             <TextInput
               style={styles.header_mainText}
-              value={recepieTitle}
-              onChangeText={setRecepieTitle}
-              placeholder="Recepie's Title"
+              value={recipeTitle}
+              onChangeText={setRecipeTitle}
+              placeholder="Recipe's Title"
             />
             <TouchableOpacity onPress={GoBackToTopTabScreen}>
               <Image
@@ -259,8 +259,8 @@ const CreateScreen = ({ route }) => {
           </View>
           <View style={styles.description}>
             <TextInput
-              value={recepieDescription}
-              onChangeText={setRecepieDescription}
+              value={recipeDescription}
+              onChangeText={setRecipeDescription}
               multiline={true}
               numberOfLines={5}
               placeholder="Enter the description here"
