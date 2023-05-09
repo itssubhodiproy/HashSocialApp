@@ -41,6 +41,10 @@ const CreateIngredients = ({
   updateIngredientText,
   updateIngredientUnit,
   updateIngredientQuantity,
+  changeCalories,
+  changeCookingTime,
+  calories,
+  cookingTime,
 }) => {
   const navigation = useNavigation();
 
@@ -96,7 +100,13 @@ const CreateIngredients = ({
           }}
         >
           <Text style={{ fontSize: 12 }}>Calories</Text>
-          <TextInput placeholder="495" maxLength={15}></TextInput>
+          <TextInput
+            placeholder="495"
+            maxLength={15}
+            value={calories}
+            onChangeText={changeCalories?.bind(this)}
+            textAlign="center"
+          ></TextInput>
         </View>
         <View
           style={{
@@ -106,7 +116,13 @@ const CreateIngredients = ({
           }}
         >
           <Text style={{ fontSize: 12 }}>Prep Time</Text>
-          <TextInput placeholder="35 mins" maxLength={10}></TextInput>
+          <TextInput
+            placeholder="35 mins"
+            maxLength={10}
+            value={cookingTime}
+            onChangeText={changeCookingTime?.bind(this)}
+            textAlign="center"
+          ></TextInput>
         </View>
       </View>
       <ScrollView>
@@ -149,7 +165,7 @@ const CreateIngredients = ({
                 value={ingredient.quantity}
                 onChangeText={updateIngredientQuantity.bind(this, index)}
                 textAlign="center"
-                style={{borderWidth:1, borderColor:"#e0e0e0"}}
+                style={{ borderWidth: 1, borderColor: "#e0e0e0" }}
               />
               <TextInput
                 placeholder="tbsp"
@@ -157,7 +173,7 @@ const CreateIngredients = ({
                 value={ingredient.unit}
                 onChangeText={updateIngredientUnit.bind(this, index)}
                 textAlign="center"
-                style={{borderWidth:1, borderColor:"#e0e0e0"}}
+                style={{ borderWidth: 1, borderColor: "#e0e0e0" }}
               />
             </View>
           </TouchableOpacity>

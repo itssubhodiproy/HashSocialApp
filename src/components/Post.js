@@ -70,7 +70,7 @@ function Post({ item }) {
           {/* badges */}
           <Badges />
           {/* recepie metrics */}
-          <Metrics />
+          <Metrics/>
           {/* user profile */}
           {!openDrawer && <UserDetails userName={userName} />}
         </>

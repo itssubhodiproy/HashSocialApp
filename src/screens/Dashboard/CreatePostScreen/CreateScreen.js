@@ -25,6 +25,18 @@ const CreateScreen = ({ route }) => {
   const [Ingredients, setIngredients] = useState([]);
   const [category, setCategory] = useState([]);
 
+  const [calories, setCalories] = useState("");
+  const [servings, setServings] = useState("");
+  const [cookingTime, setCookingTime] = useState("");
+
+  const changeCalories = (text) => {
+    setCalories(text);
+  };
+
+  const changeCookingTime = (text) => {
+    setCookingTime(text);
+  };
+
   // const [coverImage, setCoverImage] = useState("");
 
   // state of the loading
@@ -92,10 +104,15 @@ const CreateScreen = ({ route }) => {
   };
 
   const SubmitPost = async () => {
-    if (recipeTitle === "" || recipeDescription === "") {
+    if (
+      recipeTitle === "" ||
+      recipeDescription === "" ||
+      calories === "" ||
+      cookingTime === ""
+    ) {
       Alert.alert(
         "Please fill all the fields",
-        "For posting recipe, title and description is required"
+        "For posting recipe, title, description, calories, cookingTime is required"
       );
       return;
     }
@@ -119,6 +136,8 @@ const CreateScreen = ({ route }) => {
       category: category,
       coverURL: coverURL,
       coverType: coverType,
+      calories: calories,
+      cookingTime: cookingTime,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
     console.log("Document written with ID: ", docRef.id);
@@ -291,6 +310,10 @@ const CreateScreen = ({ route }) => {
               deleteIngredients={deleteIngredients}
               updateIngredientUnit={updateIngredientUnit}
               updateIngredientQuantity={updateIngredientQuantity}
+              changeCalories={changeCalories}
+              changeCookingTime={changeCookingTime}
+              calories={calories}
+              cookingTime={cookingTime}
             />
           </View>
           <View style={styles.submitButton}>

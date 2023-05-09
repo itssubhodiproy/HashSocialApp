@@ -89,7 +89,7 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
         />
       </View>
 
-      <Metrics />
+      <Metrics item={item} />
       <Badges />
       <UserDetails userName={item ? item.userName : "user"} />
       <BottomBar />

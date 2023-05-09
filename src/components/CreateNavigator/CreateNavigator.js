@@ -14,9 +14,11 @@ const CreateNavigator = ({
   updateIngredientText,
   updateIngredientUnit,
   updateIngredientQuantity,
-  incrementQuantity,
-  decrementQuantity,
   deleteIngredients,
+  changeCookingTime,
+  changeCalories,
+  calories,
+  cookingTime,
 }) => {
   const Tab = createMaterialTopTabNavigator();
 
@@ -67,8 +69,10 @@ const CreateNavigator = ({
             updateIngredientUnit={updateIngredientUnit}
             updateIngredientQuantity={updateIngredientQuantity}
             deleteIngredients={deleteIngredients}
-            incrementQuantity={incrementQuantity}
-            decrementQuantity={decrementQuantity}
+            changeCalories={changeCalories}
+            changeCookingTime={changeCookingTime}
+            calories={calories}
+            cookingTime={cookingTime}
           />
         )}
         options={{

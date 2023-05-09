@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const Metrics = () => {
+const Metrics = ({item}) => {
   return (
     <View style={styles.recepieMetrics}>
       <View style={styles.singleRecepieMetrics}>
-        <Text style={styles.mainText}>15</Text>
+        <Text style={styles.mainText}>{item?.cookingTime}</Text>
         <Text style={styles.nonMainText}>mins</Text>
       </View>
       <View style={styles.singleRecepieMetrics}>
-        <Text style={styles.mainText}>568</Text>
+        <Text style={styles.mainText}>{item?.calories}</Text>
         <Text style={styles.nonMainText}>Kcal</Text>
       </View>
     </View>
