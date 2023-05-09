@@ -38,6 +38,7 @@ const CreateScreen = ({ route }) => {
   const addIngredientsToState = () => {
     const ingredient = {
       text: "",
+      unit: "",
       quantity: 1,
     };
     const newIngredients = [...Ingredients, ingredient];
@@ -48,6 +49,18 @@ const CreateScreen = ({ route }) => {
   const updateIngredientText = (index, text) => {
     const newIngredients = [...Ingredients];
     newIngredients[index].text = text;
+    setIngredients(newIngredients);
+  };
+  // update ingredient unit based on the index
+  const updateIngredientUnit = (index, unit) => {
+    const newIngredients = [...Ingredients];
+    newIngredients[index].unit = unit;
+    setIngredients(newIngredients);
+  };
+  // update ingredient quantity based on the index
+  const updateIngredientQuantity = (index, quantity) => {
+    const newIngredients = [...Ingredients];
+    newIngredients[index].quantity = quantity;
     setIngredients(newIngredients);
   };
 
@@ -214,7 +227,6 @@ const CreateScreen = ({ route }) => {
       { cancelable: false }
     );
   };
-
   useEffect(() => {
     if (isFocused && route.params?.cameraFile) {
       const instructionObject = {
@@ -230,8 +242,7 @@ const CreateScreen = ({ route }) => {
     }
   }, [isFocused]);
 
-  useEffect(() => {
-  }, [Instructions, Ingredients]);
+  useEffect(() => {}, [Instructions, Ingredients]);
 
   return (
     <SafeAreaView>
@@ -278,6 +289,8 @@ const CreateScreen = ({ route }) => {
               decrementQuantity={decrementQuantity}
               updateIngredientText={updateIngredientText}
               deleteIngredients={deleteIngredients}
+              updateIngredientUnit={updateIngredientUnit}
+              updateIngredientQuantity={updateIngredientQuantity}
             />
           </View>
           <View style={styles.submitButton}>

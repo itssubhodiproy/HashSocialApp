@@ -12,6 +12,8 @@ const CreateNavigator = ({
   addIngredientsToState,
   Ingredients,
   updateIngredientText,
+  updateIngredientUnit,
+  updateIngredientQuantity,
   incrementQuantity,
   decrementQuantity,
   deleteIngredients,
@@ -62,6 +64,8 @@ const CreateNavigator = ({
             addIngredientsToState={addIngredientsToState}
             Ingredients={Ingredients}
             updateIngredientText={updateIngredientText}
+            updateIngredientUnit={updateIngredientUnit}
+            updateIngredientQuantity={updateIngredientQuantity}
             deleteIngredients={deleteIngredients}
             incrementQuantity={incrementQuantity}
             decrementQuantity={decrementQuantity}

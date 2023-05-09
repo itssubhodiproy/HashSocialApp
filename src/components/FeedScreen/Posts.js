@@ -27,7 +27,6 @@ const Posts = ({ item, focusedIndex, index}) => {
       <ImagePost
         item={item}
         openBottomDrawer={openBottomDrawer}
-        toggleDrawer={toggleDrawer}
         focusedIndex={focusedIndex}
         index={index}
       />

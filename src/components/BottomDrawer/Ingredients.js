@@ -22,15 +22,35 @@ const Ingredients = ({ item }) => {
         >
           Items
         </Text>
-        <Text
+        <View
           style={{
-            color: "#fc433c",
-            textDecorationLine: "underline",
-            fontWeight: "bold",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            // width: "30%",
           }}
         >
-          Quantity
-        </Text>
+          <Text
+            style={{
+              color: "#fc433c",
+              textDecorationLine: "underline",
+              fontWeight: "bold",
+              marginRight: 10,
+            }}
+          >
+            Quantity
+          </Text>
+          <Text
+            style={{
+              color: "#fc433c",
+              textDecorationLine: "underline",
+              fontWeight: "bold",
+            }}
+          >
+            Unit
+          </Text>
+        </View>
       </View>
       {Ingredients?.map((ingredient, index) => {
         return (
@@ -40,7 +60,7 @@ const Ingredients = ({ item }) => {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "space-evenly",
               borderBottomWidth: 2,
               borderColor: "#e0e0e0",
               margin: 15,
@@ -66,7 +86,17 @@ const Ingredients = ({ item }) => {
                 {ingredient.text}
               </Text>
             </View>
-            <Text>{ingredient.quantity}</Text>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text>{ingredient.quantity}</Text>
+              <Text style={{marginLeft:20}}>{ingredient.unit}</Text>
+            </View>
           </View>
         );
       })}

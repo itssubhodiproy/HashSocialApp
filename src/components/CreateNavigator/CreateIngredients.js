@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -17,16 +18,19 @@ import { CreatePageSingleRecordHeight } from "../../Constants";
 //     id: 1,
 //     text: "1 cup of water",
 //     quantity: "1",
+//     unit: "tbsp",
 //   },
 //   {
 //     id: 2,
 //     text: "1 cup of water",
 //     quantity: "1",
+//     unit: "tbsp",
 //   },
 //   {
 //     id: 3,
 //     text: "1 cup of water",
 //     quantity: "1",
+//     unit: "tbsp",
 //   },
 // ];
 
@@ -35,87 +39,134 @@ const CreateIngredients = ({
   Ingredients,
   deleteIngredients,
   updateIngredientText,
-  incrementQuantity,
-  decrementQuantity,
+  updateIngredientUnit,
+  updateIngredientQuantity,
 }) => {
   const navigation = useNavigation();
+
+  const deleteIngredientsHandler = () => {
+    Alert.alert(
+      "Delete Ingredient",
+      "Are you sure you want to delete this ingredient?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          text: "Delete",
+          onPress: () => deleteIngredients(),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          paddingVertical: 20,
+          backgroundColor: "white",
+          borderBottomWidth: 1,
+          borderColor: "#e0e0e0",
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 12 }}>Serving Size</Text>
+          <TextInput placeholder="4" maxLength={10}></TextInput>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 12 }}>Calories</Text>
+          <TextInput placeholder="495" maxLength={15}></TextInput>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 12 }}>Prep Time</Text>
+          <TextInput placeholder="35 mins" maxLength={10}></TextInput>
+        </View>
+      </View>
       <ScrollView>
         {Ingredients?.map((ingredient, index) => (
-          <View style={styles.ingredients} key={index}>
+          <TouchableOpacity
+            style={styles.ingredients}
+            key={index}
+            onLongPress={deleteIngredientsHandler}
+          >
             <View
               style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "flex-start",
+                borderRightWidth: 1,
+                width: "60%",
               }}
             >
-              <Text style={styles.ingredient_id}>{index + 1}</Text>
               <TextInput
-                // style={styles.add_instruction_text}
                 value={ingredient.text}
                 onChangeText={updateIngredientText.bind(this, index)}
                 multiline={true}
-                placeholder="Add ingredient details"
+                placeholder="Add ingredient"
               />
-              {/* {ingredient.text} */}
             </View>
             <View
               style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
+                width: "50%",
+                paddingHorizontal: 40,
               }}
             >
-              <View
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  // borderWidth: 1,
-                  paddingHorizontal: 10,
-                  margin: 20,
-                  height: "80%",
-                  borderRadius: 10,
-                  justifyContent: "space-between",
-                }}
-              >
-                <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                  <Image
-                    source={{
-                      uri: "https://cdn-icons-png.flaticon.com/512/153/153605.png",
-                    }}
-                    style={{ width: 15, height: 15 }}
-                  ></Image>
-                </TouchableOpacity>
-                <Text>{ingredient.quantity}</Text>
-                <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                  <Image
-                    source={{
-                      uri: "https://cdn-icons-png.flaticon.com/512/56/56889.png",
-                    }}
-                    style={{ width: 15, height: 15 }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity onPress={() => deleteIngredients(index)}>
-                <Image
-                  source={{
-                    uri: "https://cdn-icons-png.flaticon.com/512/3405/3405244.png",
-                  }}
-                  style={{ height: 20, width: 20 }}
-                />
-              </TouchableOpacity>
+              <TextInput
+                placeholder="2"
+                maxLength={5}
+                value={ingredient.quantity}
+                onChangeText={updateIngredientQuantity.bind(this, index)}
+                textAlign="center"
+                style={{borderWidth:1, borderColor:"#e0e0e0"}}
+              />
+              <TextInput
+                placeholder="tbsp"
+                maxLength={10}
+                value={ingredient.unit}
+                onChangeText={updateIngredientUnit.bind(this, index)}
+                textAlign="center"
+                style={{borderWidth:1, borderColor:"#e0e0e0"}}
+              />
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
         <TouchableOpacity onPress={addIngredientsToState}>
           <View style={styles.AddIngredients}>
-            <Text style={styles.add_instruction_id}>
+            {/* <Text style={styles.add_instruction_id}>
               {Ingredients?.length + 1}
-            </Text>
+            </Text> */}
             <View style={styles.instructions_image_view}>
               <Image
                 source={require("../../../assets/plus-add.png")}
@@ -149,6 +200,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderColor: "#e0e0e0",
+    paddingHorizontal: 20,
   },
   AddIngredients: {
     width: "100%",

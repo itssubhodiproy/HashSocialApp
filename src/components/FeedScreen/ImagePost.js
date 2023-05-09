@@ -5,6 +5,8 @@ import {
   View,
   ImageBackground,
   Text,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,7 +22,7 @@ import BottomBar from "./BottomBar";
 import { Video } from "expo-av";
 import { useIsFocused } from "@react-navigation/native";
 
-const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
+const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
   const [image, setImage] = useState({
     uri: !item.coverURL
       ? "https://m.timesofindia.com/photo/80045903/80045903.jpg"
@@ -29,13 +31,11 @@ const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-
   return (
     <View>
-      <TouchableWithoutFeedback
-        onPress={toggleDrawer}
-        // onPressIn={pauseVideo}
-        // onPressOut={playVideo}
+      <View
+      // onPressIn={pauseVideo}
+      // onPressOut={playVideo}
       >
         {item.coverType === "image" ? (
           <ImageBackground
@@ -87,12 +87,20 @@ const Post = ({ item, toggleDrawer, shouldPlay, index, focusedIndex }) => {
           ]}
           style={[styles.gradient, StyleSheet.absoluteFillObject]}
         />
-      </TouchableWithoutFeedback>
+      </View>
 
       <Metrics />
       <Badges />
       <UserDetails userName={item ? item.userName : "user"} />
       <BottomBar />
+      <View style={{ position: "absolute", left: 50, bottom: 50 }}>
+        <TouchableOpacity
+          onPress={openBottomDrawer}
+          style={{ backgroundColor: "yellow", padding: 10, borderRadius: 10 }}
+        >
+          <Text>View Recipe</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
