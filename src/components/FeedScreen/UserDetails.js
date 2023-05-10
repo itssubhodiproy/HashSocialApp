@@ -49,7 +49,11 @@ const UserDetails = ({ item, openBottomDrawer }) => {
           justifyContent: "flex-start",
           marginTop: 10,
         }}
-        onPress={() => navigation.navigate("OtherUserProfileScreen")}
+        onPress={() =>
+          navigation.navigate("OtherUserProfileScreen", {
+            item: item,
+          })
+        }
       >
         <Image
           source={{ uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg" }}

@@ -1,48 +1,120 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { firebase } from "../../../config/firebase";
+import { useIsFocused } from "@react-navigation/native";
+import { CARD_HEIGHT, CARD_WIDTH } from "../../../Constants";
+import { ActivityIndicator } from "react-native-paper";
 
-const OtherUserProfileScreen = ({ navigation }) => {
+const retriveData = async ({ item }) => {};
+
+const OtherUserProfileScreen = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
+  const [userName, setUserName] = useState("");
+  const [upvotedRecieved, setUpvotedRecieved] = useState(0);
+  const [upvotedGiven, setUpvotedGiven] = useState(0);
+
+  const { item } = route.params;
+
+  // retrive postOwnerId from route.params and then fetch user name from users collection and total number of  upvoted recieved from upvotes collection
+  useEffect(() => {
+    if (isFocused) {
+      setUserName(item.userName);
+      // retrive total number of upvotes recieved from upvote collection
+      firebase
+        .firestore()
+        .collection("upvotes")
+        .where("To", "==", item.uid)
+        .get()
+        .then((snapshot) => {
+          setUpvotedRecieved(snapshot.size);
+        });
+      // retrive total number of upvotes given from upvote collection
+      firebase
+        .firestore()
+        .collection("upvotes")
+        .where("From", "==", item.uid)
+        .get()
+        .then((snapshot) => {
+          setUpvotedGiven(snapshot.size);
+        });
+    }
+  }, [isFocused, userName, upvotedRecieved, upvotedGiven]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>Subh</Text>
-      <Text style={styles.userRole}>Superior</Text>
-      <Image
-        style={styles.profilePicture}
-        source={{
-          uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
-        }}
-      ></Image>
-      <View style={styles.badgeRow}>
-        <Image
-          style={styles.singleBadge}
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/6270/6270515.png",
+      {userName == "" ? (
+        <View
+          style={{
+            display: "flex",
+            width: CARD_WIDTH,
+            height: CARD_HEIGHT,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
-        <Image
-          style={styles.singleBadge}
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/3314/3314467.png",
-          }}
-        />
-        <Image
-          style={styles.singleBadge}
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/2583/2583264.png",
-          }}
-        />
-      </View>
-      <Text style={styles.userRole}>See All</Text>
-      <View style={styles.logOutButtonPosition}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        >
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      ) : (
+        <>
+          <Text style={styles.username}>{userName}</Text>
+          <Text style={styles.userRole}>Superior</Text>
           <Image
+            style={styles.profilePicture}
             source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/189/189260.png",
+              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
             }}
-            style={{ width: 50, height: 50, padding: 10 }}
           ></Image>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.badgeRow}>
+            <Image
+              style={styles.singleBadge}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/6270/6270515.png",
+              }}
+            />
+            <Image
+              style={styles.singleBadge}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/3314/3314467.png",
+              }}
+            />
+            <Image
+              style={styles.singleBadge}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/2583/2583264.png",
+              }}
+            />
+          </View>
+          <Text style={styles.userRole}>See All</Text>
+          <View
+            style={{
+              padding: 10,
+              display: "flex",
+              width: CARD_WIDTH,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontWeight: "bold", paddingTop: 5 }}>
+              Total Upvotes received: {upvotedRecieved}
+            </Text>
+            <Text style={{ fontWeight: "bold", paddingTop: 5 }}>
+              Total Upvotes given: {upvotedGiven}
+            </Text>
+          </View>
+
+          <View style={styles.logOutButtonPosition}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/512/189/189260.png",
+                }}
+                style={{ width: 50, height: 50, padding: 10 }}
+              ></Image>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };
