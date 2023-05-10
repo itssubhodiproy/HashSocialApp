@@ -66,7 +66,31 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = async (
+    postId,
+    postOwnerId,
+    currentLoggedInUserId
+  ) => {
+    // Check if the user has already upvoted the post
+    const db = firebase.firestore();
+    const upvoteRef = db
+      .collection("upvotes")
+      .where("PostId", "==", postId)
+      .where("From", "==", currentLoggedInUserId);
+    const upvoteSnapshot = await upvoteRef.get();
+    if (!upvoteSnapshot.empty) {
+      console.log("Already upvoted!");
+      return;
+    }
+    // Create a new upvote document in the 'upvotes' collection
+    const createdAt = new Date();
+    const newUpvoteRef = db.collection("upvotes").doc();
+    await newUpvoteRef.set({
+      PostId: postId,
+      To: postOwnerId,
+      From: currentLoggedInUserId,
+      CreatedAt: createdAt,
+    });
     // Start the animation
     Animated.timing(animation, {
       toValue: 1,
@@ -86,7 +110,9 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
     <View>
       <DoubleClickTouchableOpacity
         onSingleClick={() => Alert.alert("Single Clicked")}
-        onDoubleClick={handleDoubleClick}
+        onDoubleClick={() =>
+          handleDoubleClick(item.id, item.uid, firebase.auth().currentUser.uid)
+        }
       >
         <View>
           {item.coverType === "image" ? (

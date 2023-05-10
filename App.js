@@ -32,7 +32,7 @@ function App() {
 
   return (
     <Stack.Navigator
-      initialRouteName={!user ? "Dashboard" : "AuthScreen"}
+      initialRouteName={user ? "Dashboard" : "AuthScreen"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
