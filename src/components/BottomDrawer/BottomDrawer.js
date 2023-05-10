@@ -17,7 +17,7 @@ export default function BottomDrawer({ item }) {
       <View style={styles.navigator}>
         <NavigatorModal item={item} />
       </View>
-      <View style={styles.activityBar}>
+      {/* <View style={styles.activityBar}>
         <Image
           style={styles.activityButton}
           source={{
@@ -36,7 +36,7 @@ export default function BottomDrawer({ item }) {
             uri: "https://cdn-icons-png.flaticon.com/512/929/929539.png",
           }}
         />
-      </View>
+      </View> */}
     </View>
   );
 }

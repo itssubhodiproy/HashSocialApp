@@ -1,13 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
+import SingleComment from "./SingleComment";
 
 const Comments = (props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Comments</Text>
-      <Text style={styles.subtext}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-        voluptate, quod, quia, voluptates quas voluptatibus quibusdam
+      <SingleComment />
+      <SingleComment />
+      <Text
+        style={{
+          position: "absolute",
+          alignSelf: "center",
+          bottom: 0,
+          fontWeight: "bold",
+          color: "green",
+          fontSize: 16,
+        }}
+      >
+        Show all comments
       </Text>
     </View>
   );
@@ -20,9 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
     height: "100%",
-    // display: "flex",
-    // alignItems: "center",
-    padding: 10,
+    paddingTop: 10,
   },
   header: {
     fontSize: 18,
