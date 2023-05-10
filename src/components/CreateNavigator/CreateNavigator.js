@@ -3,6 +3,7 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CreateIngredients from "./CreateIngredients";
 import CreateInstructions from "./CreateInstructions";
+import AddCategory from "./AddCategory";
 
 const CreateNavigator = ({
   Instructions,
@@ -81,7 +82,7 @@ const CreateNavigator = ({
       />
       <Tab.Screen
         name="Category"
-        component={CreateIngredients}
+        component={AddCategory}
         options={{
           tabBarLabel: "Category",
         }}
