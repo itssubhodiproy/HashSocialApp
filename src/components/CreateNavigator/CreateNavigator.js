@@ -20,6 +20,8 @@ const CreateNavigator = ({
   changeCalories,
   calories,
   cookingTime,
+  addOrRemoveCategory,
+  isCategorySelected,
 }) => {
   const Tab = createMaterialTopTabNavigator();
 
@@ -82,7 +84,12 @@ const CreateNavigator = ({
       />
       <Tab.Screen
         name="Category"
-        component={AddCategory}
+        children={() => (
+          <AddCategory
+            addOrRemoveCategory={addOrRemoveCategory}
+            isCategorySelected={isCategorySelected}
+          />
+        )}
         options={{
           tabBarLabel: "Category",
         }}
@@ -90,7 +97,8 @@ const CreateNavigator = ({
     </Tab.Navigator>
   );
 };
-
+// addOrRemoveCategory={addOrRemoveCategory}
+//               isCategorySelected={isCategorySelected}
 export default CreateNavigator;
 
 const styles = StyleSheet.create({});

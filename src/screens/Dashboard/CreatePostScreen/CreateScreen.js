@@ -29,6 +29,28 @@ const CreateScreen = ({ route }) => {
   const [servings, setServings] = useState("");
   const [cookingTime, setCookingTime] = useState("");
 
+  // add or remove category from the state
+  const addOrRemoveCategory = (item) => {
+    const newCategory = [...category];
+    const index = newCategory.indexOf(item);
+    if (index > -1) {
+      newCategory.splice(index, 1);
+    } else {
+      newCategory.push(item);
+    }
+    setCategory(newCategory);
+  };
+
+  // check if the category is selected or not
+  const isCategorySelected = (item) => {
+    const index = category.indexOf(item);
+    if (index > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const changeCalories = (text) => {
     setCalories(text);
   };
@@ -279,6 +301,7 @@ const CreateScreen = ({ route }) => {
               value={recipeTitle}
               onChangeText={setRecipeTitle}
               placeholder="Recipe's Title"
+              textAlign="center"
             />
             <TouchableOpacity onPress={GoBackToTopTabScreen}>
               <Image
@@ -294,6 +317,7 @@ const CreateScreen = ({ route }) => {
               multiline={true}
               numberOfLines={5}
               placeholder="Enter the description here"
+              textAlign="center"
             />
           </View>
           <View style={styles.navigator}>
@@ -314,6 +338,8 @@ const CreateScreen = ({ route }) => {
               changeCookingTime={changeCookingTime}
               calories={calories}
               cookingTime={cookingTime}
+              addOrRemoveCategory={addOrRemoveCategory}
+              isCategorySelected={isCategorySelected}
             />
           </View>
           <View style={styles.submitButton}>
