@@ -17,13 +17,12 @@ import ProfileScreen from "./ProfileScreen";
 import CreatePostScreen from "./CreatePostScreen";
 import TopTabScreen from "./TopTabScreen";
 import SearchScreen from "./SearchScreen";
-import verticalAnimation from "../../components/verticalAnimation"
+import verticalAnimation from "../../components/verticalAnimation";
+import OtherUserProfileScreen from "./OtherUserProfileScreen";
 
 const Stack = createStackNavigator();
 
 const Dashboard = () => {
-
-
   return (
     <>
       <Stack.Navigator
@@ -31,8 +30,17 @@ const Dashboard = () => {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="TopTabScreen" component={TopTabScreen} />
-        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} options={verticalAnimation}/>
+        <Stack.Screen
+          name="CreatePostScreen"
+          component={CreatePostScreen}
+          options={verticalAnimation}
+        />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen
+          name="OtherUserProfileScreen"
+          component={OtherUserProfileScreen}
+        />
+
         <Stack.Screen
           name="NotificationScreen"
           component={NotificationScreen}

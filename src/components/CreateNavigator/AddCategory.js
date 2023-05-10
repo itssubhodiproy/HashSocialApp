@@ -1,28 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 
 const SingleCategory = ({ item }) => {
   return (
-    <View
+    <TouchableOpacity
       style={{
-        backgroundColor: item ? "white" : "red",
+        backgroundColor: item ? "white" : "#fc433c",
         borderRadius: 10,
         padding: 10,
         margin: 10,
         borderWidth: item ? 1 : 0,
-        borderColor: "red",
+        borderColor: "#fc433c",
       }}
     >
       <Text
         style={{
           fontSize: 15,
           fontWeight: "500",
-          color: item ? "red" : "white",
+          color: item ? "#fc433c" : "white",
         }}
       >
         Category
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -30,7 +30,7 @@ const AddCategory = () => {
   return (
     <View style={styles.container}>
       <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        <SingleCategory item="hello"/>
+        <SingleCategory item="hello" />
         <SingleCategory />
         <SingleCategory />
         <SingleCategory />

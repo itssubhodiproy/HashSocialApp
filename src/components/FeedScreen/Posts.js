@@ -14,9 +14,6 @@ const Posts = ({ item, focusedIndex, index}) => {
     setIsBottomDrawerOpen(true);
   };
 
-  const toggleDrawer = () => {
-    setIsBottomDrawerOpen(!isBottomDrawerOpen);
-  };
 
   const closeBottomDrawer = () => {
     setIsBottomDrawerOpen(false);

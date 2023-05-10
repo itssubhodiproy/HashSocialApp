@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { CARD_HEIGHT, CARD_WIDTH } from "../../Constants";
+import { useNavigation } from "@react-navigation/native";
 
 const UserDetails = ({ item, openBottomDrawer }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -38,7 +41,7 @@ const UserDetails = ({ item, openBottomDrawer }) => {
           ></Image>
         </View>
       </TouchableOpacity>
-      <View
+      <TouchableOpacity
         style={{
           display: "flex",
           flexDirection: "row",
@@ -46,6 +49,7 @@ const UserDetails = ({ item, openBottomDrawer }) => {
           justifyContent: "flex-start",
           marginTop: 10,
         }}
+        onPress={() => navigation.navigate("OtherUserProfileScreen")}
       >
         <Image
           source={{ uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg" }}
@@ -59,7 +63,7 @@ const UserDetails = ({ item, openBottomDrawer }) => {
             54 Creations, 19 Forks
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
