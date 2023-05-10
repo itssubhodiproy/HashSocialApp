@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
+import { CARD_HEIGHT, CARD_WIDTH } from "../../Constants";
 
 const BottomBar = () => {
   const navigation = useNavigation();
@@ -60,16 +61,15 @@ const styles = StyleSheet.create({
   bottomBar: {
     position: "absolute",
     alignSelf: "center",
-    bottom: "3%",
-    width: "90%",
-    height: 50,
+    bottom: CARD_HEIGHT * 0.03,
+    width: CARD_WIDTH * 0.9,
+    height: CARD_HEIGHT * 0.07,
     backgroundColor: "#c6c6c6",
     borderRadius: 30,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    // zIndex: 2,
   },
   ProfilePicture: {
     width: 40,

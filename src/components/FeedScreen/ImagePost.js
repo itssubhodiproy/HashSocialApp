@@ -91,16 +91,8 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
 
       <Metrics item={item} />
       <Badges />
-      <UserDetails userName={item ? item.userName : "user"} />
+      <UserDetails item={item} openBottomDrawer={openBottomDrawer} />
       <BottomBar />
-      <View style={{ position: "absolute", left: 50, bottom: 50 }}>
-        <TouchableOpacity
-          onPress={openBottomDrawer}
-          style={{ backgroundColor: "yellow", padding: 10, borderRadius: 10 }}
-        >
-          <Text>View Recipe</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
