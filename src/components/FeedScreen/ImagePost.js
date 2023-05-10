@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   TouchableWithoutFeedback,
+  Animated,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,6 +19,8 @@ import Badges from "./Badges";
 import UserDetails from "./UserDetails";
 import BottomBar from "./BottomBar";
 import { Video } from "expo-av";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { firebase } from "../../config/firebase";
 
 const DoubleClickTouchableOpacity = ({
   onSingleClick,
@@ -53,6 +56,8 @@ const DoubleClickTouchableOpacity = ({
 };
 
 const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
+  const animation = useRef(new Animated.Value(0)).current;
+
   const [image, setImage] = useState({
     uri: !item.coverURL
       ? "https://m.timesofindia.com/photo/80045903/80045903.jpg"
@@ -62,7 +67,19 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDoubleClick = () => {
-    Alert.alert("Double Clicked");
+    // Start the animation
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 500, // 1 second animation
+      useNativeDriver: true,
+    }).start(() => {
+      // Reset the animation when it is finished
+      animation.setValue(0);
+    });
+  };
+
+  const heartAnimatedStyle = {
+    transform: [{ scale: animation }],
   };
 
   return (
@@ -122,6 +139,21 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
             ]}
             style={[styles.gradient, StyleSheet.absoluteFillObject]}
           />
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                width: CARD_WIDTH,
+                height: CARD_HEIGHT,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              heartAnimatedStyle,
+            ]}
+          >
+            <Icon name="star" size={128} color="#fc433c" />
+          </Animated.View>
         </View>
       </DoubleClickTouchableOpacity>
       <Metrics item={item} />
