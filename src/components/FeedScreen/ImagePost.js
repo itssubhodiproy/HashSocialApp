@@ -7,20 +7,50 @@ import {
   Text,
   Button,
   TouchableOpacity,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { CARD_HEIGHT, CARD_WIDTH } from "../../Constants";
-import {
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
 import Metrics from "./Metrics";
 import Badges from "./Badges";
 import UserDetails from "./UserDetails";
 import BottomBar from "./BottomBar";
 import { Video } from "expo-av";
-import { useIsFocused } from "@react-navigation/native";
+
+const DoubleClickTouchableOpacity = ({
+  onSingleClick,
+  onDoubleClick,
+  children,
+  ...props
+}) => {
+  const [lastPress, setLastPress] = useState(0);
+  const doublePress = useRef(false);
+
+  const handlePress = () => {
+    const time = new Date().getTime();
+
+    if (time - lastPress <= 300) {
+      onDoubleClick();
+      doublePress.current = true;
+    } else {
+      setLastPress(time);
+      setTimeout(() => {
+        if (!doublePress.current) {
+          onSingleClick();
+        }
+        doublePress.current = false;
+      }, 300);
+    }
+  };
+
+  return (
+    <TouchableHighlight onPress={handlePress} {...props}>
+      {children}
+    </TouchableHighlight>
+  );
+};
 
 const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
   const [image, setImage] = useState({
@@ -31,64 +61,69 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleDoubleClick = () => {
+    Alert.alert("Double Clicked");
+  };
+
   return (
     <View>
-      <View
-      // onPressIn={pauseVideo}
-      // onPressOut={playVideo}
+      <DoubleClickTouchableOpacity
+        onSingleClick={() => Alert.alert("Single Clicked")}
+        onDoubleClick={handleDoubleClick}
       >
-        {item.coverType === "image" ? (
-          <ImageBackground
-            source={image}
-            resizeMode="cover"
-            style={styles.image}
-          />
-        ) : (
-          <>
-            <Video
-              source={{ uri: item.coverURL }}
-              style={styles.video}
+        <View>
+          {item.coverType === "image" ? (
+            <ImageBackground
+              source={image}
               resizeMode="cover"
-              isLooping
-              shouldPlay={focusedIndex === index}
-              isMuted={false}
-              onLoadStart={() => {
-                setIsLoading(true);
-              }}
-              onLoad={() => {
-                setIsLoading(false);
-              }}
+              style={styles.image}
             />
-            {isLoading && (
-              <View
-                style={{
-                  position: "absolute",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  height: "100%",
+          ) : (
+            <>
+              <Video
+                source={{ uri: item.coverURL }}
+                style={styles.video}
+                resizeMode="cover"
+                isLooping
+                shouldPlay={focusedIndex === index}
+                isMuted={false}
+                onLoadStart={() => {
+                  setIsLoading(true);
                 }}
-              >
-                <Image
-                  source={{ uri: "https://i.gifer.com/ZZ5H.gif" }}
-                  style={{ width: 80, height: 80, resizeMode: "contain" }}
-                ></Image>
-              </View>
-            )}
-          </>
-        )}
-        <LinearGradient
-          colors={[
-            "rgba(0,0,0,1)",
-            "transparent",
-            "transparent",
-            "rgba(0,0,0,1)",
-          ]}
-          style={[styles.gradient, StyleSheet.absoluteFillObject]}
-        />
-      </View>
-
+                onLoad={() => {
+                  setIsLoading(false);
+                }}
+              />
+              {isLoading && (
+                <View
+                  style={{
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <Image
+                    source={{ uri: "https://i.gifer.com/ZZ5H.gif" }}
+                    style={{ width: 80, height: 80, resizeMode: "contain" }}
+                  ></Image>
+                </View>
+              )}
+            </>
+          )}
+          <LinearGradient
+            colors={[
+              "rgba(0,0,0,1)",
+              "transparent",
+              "transparent",
+              "rgba(0,0,0,1)",
+            ]}
+            style={[styles.gradient, StyleSheet.absoluteFillObject]}
+          />
+        </View>
+      </DoubleClickTouchableOpacity>
       <Metrics item={item} />
       <Badges />
       <UserDetails item={item} openBottomDrawer={openBottomDrawer} />
