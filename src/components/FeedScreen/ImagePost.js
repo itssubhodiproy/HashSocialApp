@@ -71,6 +71,15 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
     postOwnerId,
     currentLoggedInUserId
   ) => {
+    // Start the animation
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 500, // 1 second animation
+      useNativeDriver: true,
+    }).start(() => {
+      // Reset the animation when it is finished
+      animation.setValue(0);
+    });
     // Check if the user has already upvoted the post
     const db = firebase.firestore();
     const upvoteRef = db
@@ -91,25 +100,21 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
       From: currentLoggedInUserId,
       CreatedAt: createdAt,
     });
-    // Start the animation
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 500, // 1 second animation
-      useNativeDriver: true,
-    }).start(() => {
-      // Reset the animation when it is finished
-      animation.setValue(0);
-    });
   };
 
   const heartAnimatedStyle = {
     transform: [{ scale: animation }],
   };
+  const [pause, setPause] = useState(false);
+
+  const pauseVideo = () => {
+    setPause((pause) => !pause);
+  };
 
   return (
     <View>
       <DoubleClickTouchableOpacity
-        onSingleClick={() => Alert.alert("Single Clicked")}
+        onSingleClick={pauseVideo}
         onDoubleClick={() =>
           handleDoubleClick(item.id, item.uid, firebase.auth().currentUser.uid)
         }
@@ -128,7 +133,7 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
                 style={styles.video}
                 resizeMode="cover"
                 isLooping
-                shouldPlay={focusedIndex === index}
+                shouldPlay={focusedIndex === index && !pause}
                 isMuted={false}
                 onLoadStart={() => {
                   setIsLoading(true);
