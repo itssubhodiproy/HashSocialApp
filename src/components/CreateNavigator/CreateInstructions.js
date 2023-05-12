@@ -13,6 +13,10 @@ import {
 import React from "react";
 import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import DraggableFlatList, {
+  ScaleDecorator,
+  RenderItemParams,
+} from "react-native-draggable-flatlist";
 
 const Instructions_Height = Dimensions.get("window").height * 0.15;
 
@@ -21,10 +25,11 @@ const CreateInstructions = ({
   deleteInstruction,
   updateInstruction,
   changeCover,
+  changeInstructionsState,
 }) => {
   const navigation = useNavigation();
   // console.log("Instructions", Instructions);
-  const DeleteRow = (index) => {
+  const DeleteRow = (id) => {
     Alert.alert(
       "Delete Instruction",
       "Are you sure you want to delete this instruction?",
@@ -36,7 +41,7 @@ const CreateInstructions = ({
         },
         {
           text: "Delete",
-          onPress: () => deleteInstruction(index),
+          onPress: () => deleteInstruction(id),
           style: "destructive",
         },
       ],
@@ -44,7 +49,7 @@ const CreateInstructions = ({
     );
   };
 
-  const makeItCover = (index) => {
+  const makeItCover = (id) => {
     Alert.alert(
       "Make it Cover",
       "Are you sure you want to make this instruction as cover?",
@@ -56,7 +61,7 @@ const CreateInstructions = ({
         },
         {
           text: "Make it Cover",
-          onPress: () => changeCover(index),
+          onPress: () => changeCover(id),
           style: "destructive",
         },
       ],
@@ -64,61 +69,76 @@ const CreateInstructions = ({
     );
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {Instructions?.map((instruction, index) => (
-          <View key={index}>
-            {/* cover image identification */}
-            <View style={styles.instructions}>
-              {instruction.isCover ? (
-                <View style={styles.cover}>
-                  <Image
-                    source={require("../../../assets/cover-star.png")}
-                    style={{ width: 20, height: 20 }}
-                  ></Image>
-                </View>
-              ) : null}
-
-              {/* /// */}
-              <Text style={styles.instruction_id}>{index + 1}</Text>
-              <TouchableOpacity
-                onPress={() => DeleteRow(index)}
-                onLongPress={() => makeItCover(index)}
-              >
-                <View style={styles.instructions_image_view}>
-                  <Image
-                    source={{ uri: instruction.fileURL }}
-                    style={styles.instruction_image}
-                  ></Image>
-                </View>
-              </TouchableOpacity>
-              <TextInput
-                style={styles.instruction_text_view}
-                value={instruction.text}
-                onChangeText={updateInstruction.bind(this, index)}
-                placeholder="Add instruction details"
-                multiline={true}
-                numberOfLines={4}
-              ></TextInput>
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
-          <View style={styles.instructions}>
-            <Text style={styles.add_instruction_id}>
-              {Instructions?.length + 1}
-            </Text>
-            <View style={styles.instructions_image_view}>
+  const renderItem = ({ item, drag, isActive }) => {
+    return (
+      <ScaleDecorator>
+        <View style={styles.instructions}>
+          {item.isCover ? (
+            <View style={styles.cover}>
               <Image
-                source={require("../../../assets/plus-add.png")}
-                style={styles.add_instructions_image}
+                source={require("../../../assets/cover-star.png")}
+                style={{ width: 20, height: 20 }}
               ></Image>
             </View>
-            <Text style={styles.add_instruction_text}>Add Instruction</Text>
+          ) : null}
+          <TouchableOpacity
+            activeOpacity={1}
+            onPressIn={drag}
+            disabled={isActive}
+            style={{
+              paddingRight: 10,
+            }}
+          >
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/5576/5576863.png",
+              }}
+              style={{ width: 30, height: 30 }}
+            ></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => DeleteRow(item.id)}
+            onLongPress={() => makeItCover(item.id)}
+          >
+            <View style={styles.instructions_image_view}>
+              <Image
+                source={{ uri: item.fileURL }}
+                style={styles.instruction_image}
+              ></Image>
+            </View>
+          </TouchableOpacity>
+          <TextInput
+            style={styles.instruction_text_view}
+            value={item.text}
+            onChangeText={updateInstruction.bind(this, item.id)}
+            placeholder="Add instruction details"
+            multiline={true}
+            numberOfLines={4}
+          ></TextInput>
+        </View>
+      </ScaleDecorator>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <DraggableFlatList
+        data={Instructions}
+        onDragEnd={({ data }) => changeInstructionsState(data)}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
+        <View style={styles.instructions}>
+          <View style={styles.instructions_image_view}>
+            <Image
+              source={require("../../../assets/plus-add.png")}
+              style={styles.add_instructions_image}
+            ></Image>
           </View>
-        </TouchableOpacity>
-      </ScrollView>
+          <Text style={styles.add_instruction_text}>Add Instruction</Text>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -139,7 +159,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: 10,
+    // padding: 10,
+    paddingLeft: 5,
+    paddingVertical: 10,
+    paddingRight: 10,
     borderBottomWidth: 1,
     borderColor: "#e0e0e0",
   },

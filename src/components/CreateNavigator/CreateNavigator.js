@@ -22,6 +22,7 @@ const CreateNavigator = ({
   cookingTime,
   addOrRemoveCategory,
   isCategorySelected,
+  changeInstructionsState,
 }) => {
   const Tab = createMaterialTopTabNavigator();
 
@@ -55,6 +56,7 @@ const CreateNavigator = ({
             deleteInstruction={deleteInstruction}
             updateInstruction={updateInstruction}
             changeCover={changeCover}
+            changeInstructionsState={changeInstructionsState}
           />
         )}
         options={{

@@ -79,12 +79,13 @@ const CreateScreen = ({ route }) => {
     setIngredients(newIngredients);
   };
 
-  // update ingredient text based on the index
+  // update ingredient text based on the index of the ingredient
   const updateIngredientText = (index, text) => {
     const newIngredients = [...Ingredients];
     newIngredients[index].text = text;
     setIngredients(newIngredients);
   };
+
   // update ingredient unit based on the index
   const updateIngredientUnit = (index, unit) => {
     const newIngredients = [...Ingredients];
@@ -123,6 +124,10 @@ const CreateScreen = ({ route }) => {
   // photo from the camera
   const addInstructionsToState = (instructions) => {
     setInstructions((prevState) => [...prevState, instructions]);
+  };
+
+  const changeInstructionsState = (instructions) => {
+    setInstructions(instructions);
   };
 
   const SubmitPost = async () => {
@@ -224,31 +229,38 @@ const CreateScreen = ({ route }) => {
     return { coverURL, coverType };
   };
 
-  // delete one item from the instructions by index
-  const deleteInstruction = (index) => {
+  // delete one item from the instructions by id
+  const deleteInstruction = (id) => {
     const newInstructions = [...Instructions];
-    newInstructions.splice(index, 1);
-    setInstructions(newInstructions);
-  };
-
-  // update the instructions array text by index
-  const updateInstruction = (index, text) => {
-    const newInstructions = [...Instructions];
-    newInstructions[index].text = text;
-    setInstructions(newInstructions);
-  };
-
-  // based on the index of the instruction, set the cover image
-  const changeCover = (index) => {
-    const newInstructions = [...Instructions];
-    // change already set cover image to false
     for (let i = 0; i < newInstructions.length; i++) {
-      if (newInstructions[i].isCoverImage) {
-        newInstructions[i].isCoverImage = false;
+      if (newInstructions[i].id === id) {
+        newInstructions.splice(i, 1);
       }
     }
-    // set the new cover image
-    newInstructions[index].isCoverImage = true;
+    setInstructions(newInstructions);
+  };
+
+  // update the instructions array text by id and text
+  const updateInstruction = (id, text) => {
+    const newInstructions = [...Instructions];
+    for (let i = 0; i < newInstructions.length; i++) {
+      if (newInstructions[i].id === id) {
+        newInstructions[i].text = text;
+      }
+    }
+    setInstructions(newInstructions);
+  };
+
+  // based on the id of the instruction, set the cover image
+  const changeCover = (id) => {
+    const newInstructions = [...Instructions];
+    for (let i = 0; i < newInstructions.length; i++) {
+      if (newInstructions[i].id === id) {
+        newInstructions[i].isCover = true;
+      } else {
+        newInstructions[i].isCover = false;
+      }
+    }
     setInstructions(newInstructions);
   };
 
@@ -340,6 +352,7 @@ const CreateScreen = ({ route }) => {
               cookingTime={cookingTime}
               addOrRemoveCategory={addOrRemoveCategory}
               isCategorySelected={isCategorySelected}
+              changeInstructionsState={changeInstructionsState}
             />
           </View>
           <View style={styles.submitButton}>

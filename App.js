@@ -1,7 +1,8 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, UIManager } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from "./src/config/firebase";
+import "./shims";
 
 // screens
 import Dashboard from "./src/screens/Dashboard";
@@ -11,6 +12,11 @@ import verticalAnimation from "./src/components/verticalAnimation";
 import AuthScreens from "./src/screens/AuthScreen";
 
 const Stack = createStackNavigator();
+
+if (Platform.OS === "android") {
+  UIManager.setLayoutAnimationEnabledExperimental &&
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 function App() {
   const [initializing, setInitializing] = useState(true);
