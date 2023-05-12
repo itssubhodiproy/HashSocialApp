@@ -142,23 +142,30 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
                   setIsLoading(false);
                 }}
               />
-              {isLoading && (
-                <View
-                  style={{
-                    position: "absolute",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
+
+              <View
+                style={{
+                  position: "absolute",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {isLoading && (
                   <Image
                     source={{ uri: "https://i.gifer.com/ZZ5H.gif" }}
                     style={{ width: 80, height: 80, resizeMode: "contain" }}
                   ></Image>
-                </View>
-              )}
+                )}
+                {pause && (
+                  <Image
+                    source={{ uri: "https://www.freepnglogos.com/uploads/play-button-png/index-media-cover-art-play-button-overlay-5.png" }}
+                    style={{ width: 80, height: 80, resizeMode: "contain" }}
+                  ></Image>
+                )}
+              </View>
             </>
           )}
           <LinearGradient
