@@ -114,7 +114,11 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
   return (
     <View>
       <DoubleClickTouchableOpacity
-        onSingleClick={pauseVideo}
+        onSingleClick={
+          !isLoading
+            ? pauseVideo
+            : () => console.log("You can't pause the video while it is loading")
+        }
         onDoubleClick={() =>
           handleDoubleClick(item.id, item.uid, firebase.auth().currentUser.uid)
         }
@@ -161,7 +165,9 @@ const Post = ({ item, shouldPlay, index, focusedIndex, openBottomDrawer }) => {
                 )}
                 {pause && (
                   <Image
-                    source={{ uri: "https://www.freepnglogos.com/uploads/play-button-png/index-media-cover-art-play-button-overlay-5.png" }}
+                    source={{
+                      uri: "https://www.freepnglogos.com/uploads/play-button-png/index-media-cover-art-play-button-overlay-5.png",
+                    }}
                     style={{ width: 80, height: 80, resizeMode: "contain" }}
                   ></Image>
                 )}

@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
-const SingleComment = () => {
+export const SingleComment = ({ comment }) => {
   return (
     <View
       style={{
@@ -11,7 +12,7 @@ const SingleComment = () => {
         alignItems: "flex-start",
         paddingHorizontal: 20,
         paddingVertical: 10,
-        // width: "100%",
+        width: "100%",
         borderRightWidth: 1,
         borderColor: "white",
       }}
@@ -25,13 +26,14 @@ const SingleComment = () => {
       <View
         style={{
           display: "flex",
-          // flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "flex-start",
           marginLeft: 10,
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Subhodip Roy</Text>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          {comment ? comment.userName : "Text"}
+        </Text>
         <View
           style={{
             display: "flex",
@@ -41,8 +43,7 @@ const SingleComment = () => {
           }}
         >
           <Text style={{ fontSize: 14 }}>
-            This is my comment, and I know this will be the best comment so far,
-            and I know I will get the most likes.
+            {comment ? comment.commentText : "This is comment"}
           </Text>
         </View>
         <View
@@ -55,7 +56,7 @@ const SingleComment = () => {
           }}
         >
           <Text style={{ fontWeight: "400", color: "gray", fontSize: 13 }}>
-            9 months ago
+            {comment ? comment.TimeRangeEarlier : "1h ago"}
           </Text>
           <Text
             style={{
@@ -80,7 +81,9 @@ const SingleComment = () => {
               }}
               style={{ width: 15, height: 15, marginRight: 3 }}
             ></Image>
-            <Text style={{ color: "red", fontWeight: "600" }}>8</Text>
+            <Text style={{ color: "red", fontWeight: "600" }}>
+              {comment && comment.upvoteCount ? comment.upvoteCount : 1}
+            </Text>
           </View>
         </View>
         <View
@@ -105,23 +108,39 @@ const SingleComment = () => {
   );
 };
 
-const Comments = (props) => {
+const Comments = ({ item }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      <SingleComment />
-      <SingleComment />
-      <Text
-        style={{
-          position: "absolute",
-          alignSelf: "center",
-          bottom: 0,
-          fontWeight: "bold",
-          color: "green",
-          fontSize: 16,
-        }}
+      <SingleComment
+        userName="Subhodip"
+        commentText="Hello World"
+        upvoteCount="1"
+        TimeRangeEarlier="1h ago"
+      />
+      <SingleComment
+        userName="Subhodip"
+        commentText="Hello World"
+        upvoteCount="1"
+        TimeRangeEarlier="1h ago"
+      />
+      <TouchableOpacity
+        style={{ position: "absolute", alignSelf: "center", bottom: 0 }}
+        onPress={() =>
+          navigation.navigate("CommentScreen", { item: item })
+        }
       >
-        Show all comments
-      </Text>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: "green",
+            fontSize: 16,
+          }}
+        >
+          Show all comments
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

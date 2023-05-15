@@ -18,7 +18,9 @@ import CreatePostScreen from "./CreatePostScreen";
 import TopTabScreen from "./TopTabScreen";
 import SearchScreen from "./SearchScreen";
 import verticalAnimation from "../../components/verticalAnimation";
+import horizontalAnimation from "../../components/horizontalAnimation";
 import OtherUserProfileScreen from "./OtherUserProfileScreen";
+import CommentScreen from "./CommentScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +41,11 @@ const Dashboard = () => {
         <Stack.Screen
           name="OtherUserProfileScreen"
           component={OtherUserProfileScreen}
+        />
+        <Stack.Screen
+          name="CommentScreen"
+          component={CommentScreen}
+          options={horizontalAnimation}
         />
 
         <Stack.Screen

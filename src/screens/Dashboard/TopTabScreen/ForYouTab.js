@@ -23,7 +23,9 @@ const ForYouTab = () => {
   useEffect(() => {
     if (isFocused) {
       console.log("api called");
-      getAllPosts().then((data) => setposts(data));
+      getAllPosts().then((data) => {
+        setposts(data);
+      });
     } else {
       setposts([]);
     }

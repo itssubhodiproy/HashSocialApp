@@ -1,4 +1,4 @@
-import { StyleSheet, Platform, UIManager } from "react-native";
+import { StyleSheet, Platform, UIManager, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from "./src/config/firebase";
@@ -37,17 +37,17 @@ function App() {
   if (initializing) return null;
 
   return (
-    <Stack.Navigator
-      initialRouteName={user ? "Dashboard" : "AuthScreen"}
-      screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={horizontalAnimation}
-      />
-      <Stack.Screen name="AuthScreen" component={AuthScreens} />
-    </Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName={user ? "Dashboard" : "AuthScreen"}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={horizontalAnimation}
+        />
+        <Stack.Screen name="AuthScreen" component={AuthScreens} />
+      </Stack.Navigator>
   );
 }
 

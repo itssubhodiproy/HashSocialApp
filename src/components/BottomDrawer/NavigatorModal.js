@@ -48,7 +48,7 @@ const NavigatorModal = ({ item }) => {
       />
       <Tab.Screen
         name="Comments"
-        component={Comments}
+        children={() => <Comments item={item} />}
         options={{
           tabBarLabel: "Comments",
         }}
