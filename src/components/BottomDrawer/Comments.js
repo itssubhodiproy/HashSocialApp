@@ -148,8 +148,8 @@ const Comments = ({ item }) => {
     if (isFocused) {
       const getData = async () => {
         const commentData = await getAllCommentsByPostId(item.id);
-        // console.log("commentData", commentData);
-        setAllComments(commentData);
+        // set upto three comments in the state
+        setAllComments(commentData.slice(0, 3));
       };
       getData();
     } else {
@@ -160,13 +160,16 @@ const Comments = ({ item }) => {
   return (
     <View style={styles.container}>
       {AllComments.length > 0 ? (
-        <>
-          <SingleComment comment={AllComments[0]} />
-          <SingleComment comment={AllComments[1]} />
-          <SingleComment comment={AllComments[2]} />
-        </>
+        AllComments.map((comment, index) => {
+          return (
+            <SingleComment
+              key={index}
+              comment={comment}
+            />
+          );
+        })
       ) : (
-        <ActivityIndicator color="orange" size="large"></ActivityIndicator>
+        <Text>No comments yet.. </Text>
       )}
 
       <TouchableOpacity

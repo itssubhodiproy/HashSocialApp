@@ -88,7 +88,7 @@ const ReplyScreen = (route) => {
             <SingleComment comment={reply} key={index} />
           ))
         ) : (
-          <ActivityIndicator color="orange" size="large"></ActivityIndicator>
+          <Text>No replies yet.. </Text>
         )}
       </ScrollView>
       <KeyboardAvoidingView>

@@ -155,7 +155,7 @@ const CommentScreen = (route) => {
             />
           ))
         ) : (
-          <ActivityIndicator color="orange" size="large"></ActivityIndicator>
+          <Text>No Comments yet.. </Text>
         )}
       </ScrollView>
       {/* Input field  */}
