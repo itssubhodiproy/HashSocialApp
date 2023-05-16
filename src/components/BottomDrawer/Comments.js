@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { firebase } from "../../config/firebase";
+import { ActivityIndicator } from "react-native-paper";
 
-export const SingleComment = ({ comment }) => {
+export const SingleComment = ({ comment, redirectToReplyScreen }) => {
   return (
     <View
       style={{
@@ -43,7 +46,11 @@ export const SingleComment = ({ comment }) => {
           }}
         >
           <Text style={{ fontSize: 14 }}>
-            {comment ? comment.commentText : "This is comment"}
+            {comment
+              ? comment.commentText
+                ? comment.commentText
+                : comment.replyText
+              : "This is comment"}
           </Text>
         </View>
         <View
@@ -58,15 +65,20 @@ export const SingleComment = ({ comment }) => {
           <Text style={{ fontWeight: "400", color: "gray", fontSize: 13 }}>
             {comment ? comment.TimeRangeEarlier : "1h ago"}
           </Text>
-          <Text
-            style={{
-              fontWeight: "bold",
-              color: "gray",
-              paddingHorizontal: 15,
-            }}
-          >
-            Reply
-          </Text>
+          {redirectToReplyScreen ? (
+            <TouchableOpacity onPress={() => redirectToReplyScreen(comment)}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "gray",
+                  paddingHorizontal: 15,
+                }}
+              >
+                Reply
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+
           <View
             style={{
               display: "flex",
@@ -86,50 +98,80 @@ export const SingleComment = ({ comment }) => {
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            marginTop: 10,
-          }}
-        >
-          <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/25/25623.png",
+        {redirectToReplyScreen ? (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              marginTop: 10,
             }}
-            style={{ width: 10, height: 10, marginRight: 3 }}
-          ></Image>
-          <Text style={{ fontWeight: "bold", color: "green" }}>Show Reply</Text>
-        </View>
+          >
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/25/25623.png",
+              }}
+              style={{ width: 10, height: 10, marginRight: 3 }}
+            ></Image>
+            <Text style={{ fontWeight: "bold", color: "green" }}>
+              Show Reply
+            </Text>
+          </View>
+        ) : null}
       </View>
     </View>
   );
 };
 
 const Comments = ({ item }) => {
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
+  const [AllComments, setAllComments] = React.useState([]);
+
+  const getAllCommentsByPostId = async (postId) => {
+    const comments = await firebase
+      .firestore()
+      .collection("comments")
+      .where("postId", "==", postId)
+      .orderBy("createdAt", "desc")
+      .get();
+    const data = comments.docs.map((comment) => comment.data());
+    // store the comment id in the comment object
+    data.forEach((comment, index) => {
+      comment.id = comments.docs[index].id;
+    });
+    return data;
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      const getData = async () => {
+        const commentData = await getAllCommentsByPostId(item.id);
+        // console.log("commentData", commentData);
+        setAllComments(commentData);
+      };
+      getData();
+    } else {
+      setAllComments([]);
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      <SingleComment
-        userName="Subhodip"
-        commentText="Hello World"
-        upvoteCount="1"
-        TimeRangeEarlier="1h ago"
-      />
-      <SingleComment
-        userName="Subhodip"
-        commentText="Hello World"
-        upvoteCount="1"
-        TimeRangeEarlier="1h ago"
-      />
+      {AllComments.length > 0 ? (
+        <>
+          <SingleComment comment={AllComments[0]} />
+          <SingleComment comment={AllComments[1]} />
+          <SingleComment comment={AllComments[2]} />
+        </>
+      ) : (
+        <ActivityIndicator color="orange" size="large"></ActivityIndicator>
+      )}
+
       <TouchableOpacity
         style={{ position: "absolute", alignSelf: "center", bottom: 0 }}
-        onPress={() =>
-          navigation.navigate("CommentScreen", { item: item })
-        }
+        onPress={() => navigation.navigate("CommentScreen", { item: item })}
       >
         <Text
           style={{

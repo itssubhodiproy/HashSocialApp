@@ -15,6 +15,7 @@ import { SingleComment } from "../../../components/BottomDrawer/Comments";
 import { CARD_HEIGHT, CARD_WIDTH } from "../../../Constants";
 import { ActivityIndicator, TextInput } from "react-native-paper";
 import { firebase } from "../../../config/firebase";
+import { useNavigation } from "@react-navigation/native";
 
 const InputField = () => {
   return (
@@ -76,10 +77,15 @@ const getAllCommentsByPostId = async (postId) => {
     .orderBy("createdAt", "desc")
     .get();
   const data = comments.docs.map((comment) => comment.data());
+  // store the comment id in the comment object
+  data.forEach((comment, index) => {
+    comment.id = comments.docs[index].id;
+  });
   return data;
 };
 
 const CommentScreen = (route) => {
+  const navigation = useNavigation();
   const { item } = route.route.params;
   const isFocused = useIsFocused();
   const [AllComments, setAllComments] = React.useState([]);
@@ -122,6 +128,12 @@ const CommentScreen = (route) => {
     }
   }, [isFocused, trigger]);
 
+  const redirectToReplyScreen = (comment) => {
+    // console.log(comment);
+    // navigate to reply screen
+    navigation.navigate("ReplyScreen", { comment: JSON.stringify(comment) });
+  };
+
   return (
     <SafeAreaView style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
       <ScrollView
@@ -131,11 +143,16 @@ const CommentScreen = (route) => {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
+          marginBottom: CARD_HEIGHT * 0.1,
         }}
       >
         {AllComments ? (
           AllComments.map((comment, index) => (
-            <SingleComment comment={comment} key={index} />
+            <SingleComment
+              comment={comment}
+              key={index}
+              redirectToReplyScreen={redirectToReplyScreen}
+            />
           ))
         ) : (
           <ActivityIndicator color="orange" size="large"></ActivityIndicator>
