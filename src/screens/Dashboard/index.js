@@ -22,6 +22,7 @@ import horizontalAnimation from "../../components/horizontalAnimation";
 import OtherUserProfileScreen from "./OtherUserProfileScreen";
 import CommentScreen from "./CommentScreen";
 import ReplyScreen from "./ReplyScreen";
+import SecondComment from "./CommentScreen/SecondComment";
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,11 @@ const Dashboard = () => {
         <Stack.Screen
           name="CommentScreen"
           component={CommentScreen}
+          options={horizontalAnimation}
+        />
+        <Stack.Screen
+          name="SecondCommentScreen"
+          component={SecondComment}
           options={horizontalAnimation}
         />
         <Stack.Screen

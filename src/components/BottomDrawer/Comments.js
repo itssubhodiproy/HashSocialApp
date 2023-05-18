@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import { firebase } from "../../config/firebase";
-import { ActivityIndicator } from "react-native-paper";
+import { CARD_WIDTH } from "../../Constants";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
-export const SingleComment = ({ comment, redirectToReplyScreen }) => {
+const ReplyComponent = ({ reply }) => {
   return (
     <View
       style={{
@@ -13,25 +14,149 @@ export const SingleComment = ({ comment, redirectToReplyScreen }) => {
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        paddingHorizontal: 20,
+        paddingTop: 15,
+        width: "100%",
+      }}
+    >
+      <View style={{ width: "10%" }}>
+        <Image
+          source={{
+            uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+          }}
+          style={{ width: 40, height: 40, borderRadius: 100 }}
+        />
+      </View>
+
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          marginLeft: 20,
+          width: "80%",
+        }}
+      >
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          {reply ? reply.userName : "Text"}
+        </Text>
+        <View
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            flexDirection: "row",
+          }}
+        >
+          <Text style={{ fontSize: 14 }}>
+            {reply ? reply.replyText : "This is Reply"}
+          </Text>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginTop: 10,
+          }}
+        >
+          <Text style={{ fontWeight: "400", color: "gray", fontSize: 13 }}>
+            {"13 months ago"}
+          </Text>
+          <TouchableOpacity onPress={() => console.log("reply")}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "gray",
+                paddingHorizontal: 15,
+              }}
+            >
+              Reply
+            </Text>
+          </TouchableOpacity>
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              paddingLeft: 5,
+            }}
+          >
+            <Image
+              source={{
+                uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Red_star.svg/220px-Red_star.svg.png",
+              }}
+              style={{ width: 15, height: 15, marginRight: 3 }}
+            ></Image>
+            <Text style={{ color: "red", fontWeight: "600" }}>
+              {reply && reply.upvoteCount ? reply.upvoteCount : 1}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const SingleComment = ({
+  comment,
+  trigger,
+  selectCommentforReplyHandler,
+}) => {
+  const [showReply, setShowReply] = React.useState(false);
+  const [Replies, setReplies] = React.useState([]);
+
+  const getReplies = async (id) => {
+    console.log("comment", id);
+    const data = await firebase
+      .firestore()
+      .collection("replies")
+      .where("commentId", "==", id)
+      .orderBy("createdAt", "desc")
+      .get();
+    const replies = data.docs.map((doc) => doc.data());
+    return replies;
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const replyData = await getReplies(comment.id);
+      setReplies(replyData);
+    };
+    getData();
+  }, [trigger]);
+
+  return (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        paddingLeft: 20,
+        paddingRight: 30,
         paddingVertical: 10,
         width: "100%",
         borderRightWidth: 1,
         borderColor: "white",
       }}
     >
-      <Image
-        source={{
-          uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
-        }}
-        style={{ width: 40, height: 40, borderRadius: 100 }}
-      />
+      <View style={{ width: CARD_WIDTH * 0.1 }}>
+        <Image
+          source={{
+            uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+          }}
+          style={{ width: 40, height: 40, borderRadius: 100 }}
+        />
+      </View>
+
       <View
         style={{
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
           marginLeft: 10,
+          width: CARD_WIDTH * 0.8,
         }}
       >
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
@@ -65,19 +190,19 @@ export const SingleComment = ({ comment, redirectToReplyScreen }) => {
           <Text style={{ fontWeight: "400", color: "gray", fontSize: 13 }}>
             {comment ? comment.TimeRangeEarlier : "1h ago"}
           </Text>
-          {redirectToReplyScreen ? (
-            <TouchableOpacity onPress={() => redirectToReplyScreen(comment)}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  color: "gray",
-                  paddingHorizontal: 15,
-                }}
-              >
-                Reply
-              </Text>
-            </TouchableOpacity>
-          ) : null}
+          <TouchableOpacity
+            onPress={() => selectCommentforReplyHandler(comment)}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "gray",
+                paddingHorizontal: 15,
+              }}
+            >
+              Reply
+            </Text>
+          </TouchableOpacity>
 
           <View
             style={{
@@ -98,7 +223,10 @@ export const SingleComment = ({ comment, redirectToReplyScreen }) => {
             </Text>
           </View>
         </View>
-        {redirectToReplyScreen ? (
+
+        <TouchableOpacity
+          onPress={() => setShowReply((showReply) => !showReply)}
+        >
           <View
             style={{
               display: "flex",
@@ -114,10 +242,21 @@ export const SingleComment = ({ comment, redirectToReplyScreen }) => {
               }}
               style={{ width: 10, height: 10, marginRight: 3 }}
             ></Image>
+
             <Text style={{ fontWeight: "bold", color: "green" }}>
-              Show Reply
+              {showReply ? "Hide" : "View"} Replies
             </Text>
           </View>
+        </TouchableOpacity>
+
+        {showReply ? (
+          Replies.length > 0 ? (
+            Replies.map((reply, index) => (
+              <ReplyComponent reply={reply} key={index} />
+            ))
+          ) : (
+            <Text>No replies yet.. </Text>
+          )
         ) : null}
       </View>
     </View>
@@ -134,7 +273,7 @@ const Comments = ({ item }) => {
       .firestore()
       .collection("comments")
       .where("postId", "==", postId)
-      .orderBy("createdAt", "desc")
+      .orderBy("createdAt")
       .get();
     const data = comments.docs.map((comment) => comment.data());
     // store the comment id in the comment object
@@ -161,12 +300,7 @@ const Comments = ({ item }) => {
     <View style={styles.container}>
       {AllComments.length > 0 ? (
         AllComments.map((comment, index) => {
-          return (
-            <SingleComment
-              key={index}
-              comment={comment}
-            />
-          );
+          return <SingleComment key={index} comment={comment} />;
         })
       ) : (
         <Text>No comments yet.. </Text>
@@ -174,7 +308,7 @@ const Comments = ({ item }) => {
 
       <TouchableOpacity
         style={{ position: "absolute", alignSelf: "center", bottom: 0 }}
-        onPress={() => navigation.navigate("CommentScreen", { item: item })}
+        onPress={() => navigation.navigate("SecondCommentScreen", { item: item })}
       >
         <Text
           style={{

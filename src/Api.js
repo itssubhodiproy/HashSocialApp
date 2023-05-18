@@ -20,6 +20,7 @@ export const getAllPosts = () => {
         const newPosts = [];
         querySnapshot.forEach((doc) => {
           const post = doc.data();
+          console.log(doc.id);
           post.id = doc.id;
           newPosts.push(post);
         });
@@ -59,4 +60,20 @@ export const getFileType = (uri) => {
   } else {
     return "unknown";
   }
+};
+
+export const getAllCommentsByPostId = async (postId) => {
+  const comments = await firebase
+    .firestore()
+    .collection("comments")
+    .where("postId", "==", postId)
+    .orderBy("createdAt")
+    .get();
+  const data = comments.docs.map((comment) => comment.data());
+  return data;
+};
+
+export const postComment = async (comment) => {
+  const db = firebase.firestore();
+  await db.collection("comments").add(comment);
 };

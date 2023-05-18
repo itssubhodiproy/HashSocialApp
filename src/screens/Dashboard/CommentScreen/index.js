@@ -17,57 +17,6 @@ import { ActivityIndicator, TextInput } from "react-native-paper";
 import { firebase } from "../../../config/firebase";
 import { useNavigation } from "@react-navigation/native";
 
-const InputField = () => {
-  return (
-    <View
-      style={{
-        position: "absolute",
-        bottom: 0,
-        alignSelf: "center",
-        width: CARD_WIDTH,
-        height: 70,
-        backgroundColor: "white",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      <TouchableOpacity
-        style={{
-          backgroundColor: "white",
-          padding: 10,
-          borderRadius: 12,
-          borderWidth: 1,
-          marginLeft: 10,
-        }}
-      >
-        <Image
-          source={require("../../../../assets/gallery-black.png")}
-          style={{ width: 25, height: 25 }}
-        ></Image>
-      </TouchableOpacity>
-      <TextInput
-        placeholder="hello world"
-        style={{ width: CARD_WIDTH * 0.6 }}
-      ></TextInput>
-      <TouchableOpacity
-        style={{
-          backgroundColor: "white",
-          padding: 10,
-          borderRadius: 12,
-          borderWidth: 1,
-          marginRight: 10,
-        }}
-      >
-        <Image
-          source={require("../../../../assets/sent-msg.png")}
-          style={{ width: 25, height: 25 }}
-        ></Image>
-      </TouchableOpacity>
-    </View>
-  );
-};
 // retrive all comments for a particular post by post ID from firebase firestore and sort it by createdAt
 const getAllCommentsByPostId = async (postId) => {
   const comments = await firebase
@@ -92,6 +41,35 @@ const CommentScreen = (route) => {
   const [inputText, setInputText] = React.useState("");
   const [trigger, setTrigger] = React.useState(false);
 
+  const [SelectedCommentForReply, setSelectedCommentForReply] =
+    React.useState(null);
+
+  const selectCommentforReplyHandler = (comment) => {
+    setSelectedCommentForReply(comment);
+  };
+
+  const removeSelectedCommentForReplyHandler = () => {
+    setSelectedCommentForReply(null);
+  };
+
+  const postReply = async () => {
+    if (inputText === "") {
+      Alert.alert("Please enter a reply");
+      return;
+    }
+    const data = await firebase.firestore().collection("replies").add({
+      commentId: SelectedCommentForReply.id,
+      replyText: inputText,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      userName: firebase.auth().currentUser.displayName,
+      authorId: firebase.auth().currentUser.uid,
+      userImage: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+    });
+    setInputText("");
+    removeSelectedCommentForReplyHandler();
+    setTrigger(!trigger);
+  };
+
   const postComment = async () => {
     if (inputText === "") {
       Alert.alert("Please enter a comment");
@@ -114,28 +92,21 @@ const CommentScreen = (route) => {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      // retrieve all comments from the database and set it to allComments state
-      const setThatState = async () => {
-        const data = await getAllCommentsByPostId(item.id);
-        // console.log(data);
-        setAllComments(data);
-      };
-      setThatState();
-    } else {
-      // reset allComments state
-      setAllComments([]);
-    }
+    const setThatState = async () => {
+      const data = await getAllCommentsByPostId(item.id);
+      setAllComments(data);
+    };
+    setThatState();
   }, [isFocused, trigger]);
 
-  const redirectToReplyScreen = (comment) => {
-    // console.log(comment);
-    // navigate to reply screen
-    navigation.navigate("ReplyScreen", { comment: JSON.stringify(comment) });
-  };
-
   return (
-    <SafeAreaView style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
+    <SafeAreaView
+      style={{
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
+        backgroundColor: "white",
+      }}
+    >
       <ScrollView
         contentContainerStyle={{
           paddingVertical: 10,
@@ -151,7 +122,8 @@ const CommentScreen = (route) => {
             <SingleComment
               comment={comment}
               key={index}
-              redirectToReplyScreen={redirectToReplyScreen}
+              trigger={trigger}
+              selectCommentforReplyHandler={selectCommentforReplyHandler}
             />
           ))
         ) : (
@@ -166,49 +138,88 @@ const CommentScreen = (route) => {
             bottom: 0,
             alignSelf: "center",
             width: CARD_WIDTH,
-            height: 70,
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity
+          {SelectedCommentForReply ? (
+            <View
+              style={{
+                height: 50,
+                backgroundColor: "white",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                width: CARD_WIDTH,
+              }}
+            >
+              <View style={{ width: "80%", flex: 1 }}>
+                <Text>
+                  Replying to:{" "}
+                  {SelectedCommentForReply.commentText.length > 50
+                    ? SelectedCommentForReply.commentText.slice(0, 50) + "..."
+                    : SelectedCommentForReply.commentText}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 10 }}
+                onPress={removeSelectedCommentForReplyHandler}
+              >
+                <Image
+                  source={require("../../../../assets/black-cross.png")}
+                  style={{ width: 20, height: 20 }}
+                ></Image>
+              </TouchableOpacity>
+            </View>
+          ) : null}
+
+          <View
             style={{
+              height: 70,
               backgroundColor: "white",
-              padding: 10,
-              borderRadius: 12,
-              borderWidth: 1,
-              marginLeft: 10,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <Image
-              source={require("../../../../assets/gallery-black.png")}
-              style={{ width: 25, height: 25 }}
-            ></Image>
-          </TouchableOpacity>
-          <TextInput
-            placeholder="hello world"
-            style={{ width: CARD_WIDTH * 0.6 }}
-            value={inputText}
-            onChangeText={(text) => setInputText(text)}
-          ></TextInput>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 12,
-              borderWidth: 1,
-              marginRight: 10,
-            }}
-            onPress={postComment}
-          >
-            <Image
-              source={require("../../../../assets/sent-msg.png")}
-              style={{ width: 25, height: 25 }}
-            ></Image>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "white",
+                padding: 10,
+                borderRadius: 12,
+                borderWidth: 1,
+                marginLeft: 10,
+              }}
+            >
+              <Image
+                source={require("../../../../assets/gallery-black.png")}
+                style={{ width: 25, height: 25 }}
+              ></Image>
+            </TouchableOpacity>
+            <TextInput
+              placeholder="hello world"
+              style={{ width: CARD_WIDTH * 0.6 }}
+              value={inputText}
+              onChangeText={(text) => setInputText(text)}
+            ></TextInput>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "white",
+                padding: 10,
+                borderRadius: 12,
+                borderWidth: 1,
+                marginRight: 10,
+              }}
+              onPress={!SelectedCommentForReply ? postComment : postReply}
+            >
+              <Image
+                source={require("../../../../assets/sent-msg.png")}
+                style={{ width: 25, height: 25 }}
+              ></Image>
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

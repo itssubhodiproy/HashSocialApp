@@ -52,6 +52,7 @@ const ReplyScreen = (route) => {
   useEffect(() => {
     if (isFocused) {
       const getData = async () => {
+        setReplies([]);
         const replyData = await getReplies();
         console.log("replyData", replyData);
         setReplies(replyData);

@@ -49,9 +49,9 @@ const ForYouTab = () => {
           data={posts}
           initialNumToRender={5}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <Posts item={item} focusedIndex={focusedIndex} index={index} />
-          )}
+          renderItem={({ item, index }) =>
+            (<Posts item={item} focusedIndex={focusedIndex} index={index} />)
+          }
         />
       ) : (
         <View style={styles.loader}>

@@ -15,3 +15,41 @@ export const AllCategories = [
   "Halal",
   "Indian",
 ];
+
+export const AllCommentsDummy = [
+  {
+    id: 1,
+    text: "This is a comment 1",
+    userName: "John Doe",
+    TimeRangeEarlier: "1h ago",
+    parentId: 1,
+  },
+  {
+    id: 2,
+    text: "This is a comment 2",
+    userName: "John Doe",
+    TimeRangeEarlier: "1h ago",
+    parentId: 2,
+  },
+  {
+    id: 3,
+    text: "This is a comment 3",
+    userName: "John Doe",
+    TimeRangeEarlier: "1h ago",
+    parentId: 1,
+  },
+  {
+    id: 4,
+    text: "This is a comment 4",
+    userName: "John Doe",
+    TimeRangeEarlier: "1h ago",
+    parentId: 2,
+  },
+  {
+    id: 5,
+    text: "This is a comment 5",
+    userName: "John Doe",
+    TimeRangeEarlier: "1h ago",
+    parentId: 5,
+  },
+];
